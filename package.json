@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "react": "18.3.1",
     "react-native": "0.75.4",
+    "react-native-awesome-slider": "^2.5.3",
     "react-native-gesture-handler": "^2.20.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-music-control": "^1.4.1",

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, View, Alert, NativeModules } from 'react-native';
 import TrackPlayer, { Capability } from 'react-native-track-player';
 import AudioTrackPlayer from '../components/common/TrrackPlayer';
+import FloatingPlayer from '../components/player/FloatingPlayer';
 
 const { MusicControlModule } = NativeModules;
 
@@ -107,13 +108,14 @@ const Play: React.FC = () => {
       <Button title="Stop Foreground Music Service" onPress={stopMusicService} />
 
       {/* Pass the play, pause, stop, nextTrack, and previousTrack functions as props */}
-      <AudioTrackPlayer
+      {/* <AudioTrackPlayer
         onPlay={playMusic}
         onPause={pauseMusic}
         onStop={stopMusic}
         onNextTrack={nextTrack}
         onPreviousTrack={previousTrack}
-      />
+      /> */}
+      <FloatingPlayer />
     </View>
   );
 };
