@@ -1,91 +1,98 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { iconSizes } from '../../constants/dimensions';
-// import { colors } from '../constants/color';
-import TrackPlayer, { State, Event, useTrackPlayerEvents } from 'react-native-track-player';
-import { useTheme } from '@react-navigation/native';
+// import { StyleSheet, TouchableOpacity } from 'react-native';
+// import React, { useState } from 'react';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+// import { iconSizes } from '../../constants/dimensions';
+// import { useTheme } from '@react-navigation/native';
+// import { NativeModules } from 'react-native';
 
-// Button to skip to the previous track
-export const GoToPreviousButton = ({ size = iconSizes.lg }) => {
-  const {colors} = useTheme();
-  // const handleSkipToPrevious = async () => {
-  //   try {
-  //     await TrackPlayer.skipToPrevious(); // Skip to previous track
-  //   } catch (error) {
-  //     console.error('Error skipping to previous track:', error);
-  //   }
-  // };
+// // Access Native Module for controlling MediaPlayer
+// const { MusicControlModule } = NativeModules;
 
-  return (
-    <TouchableOpacity activeOpacity={0.85} >
-      <MaterialCommunityIcons
-        name={'skip-previous'}
-        size={size}
-        color={colors.iconPrimary}
-      />
-    </TouchableOpacity>
-  );
-};
+// interface MusicControlModuleType {
+//   play: () => Promise<void>;
+//   pause: () => Promise<void>;
+//   skipToNext: () => Promise<void>;
+//   skipToPrevious: () => Promise<void>;
+// }
 
-// Button to toggle between play and pause
-export const PlayPauseButton = ({ size = iconSizes.lg }) => {
-  const {colors} = useTheme();
-  const [isPlaying, setIsPlaying] = useState(false);
+// const MusicControl: MusicControlModuleType = MusicControlModule as MusicControlModuleType;
 
-  // Function to toggle between play and pause
-  const togglePlayPause = async () => {
-    const currentState = await TrackPlayer.getState();
-    if (currentState === State.Playing) {
-      await TrackPlayer.pause();
-      setIsPlaying(false);
-    } else {
-      await TrackPlayer.play();
-      setIsPlaying(true);
-    }
-  };
+// // Button to skip to the previous track
+// export const GoToPreviousButton = ({ size = iconSizes.lg }) => {
+//   const { colors } = useTheme();
 
-  // Listen to changes in playback state to dynamically update play/pause button
-  useTrackPlayerEvents([Event.PlaybackState], (event) => {
-    if (event.state === State.Playing) {
-      setIsPlaying(true);
-    } else if (event.state === State.Paused || event.state === State.Stopped) {
-      setIsPlaying(false);
-    }
-  });
+//   const handleSkipToPrevious = async () => {
+//     try {
+//       await MusicControl.skipToPrevious(); // Skip to previous track via MediaPlayer
+//     } catch (error) {
+//       console.error('Error skipping to previous track:', error);
+//     }
+//   };
 
-  return (
-    <TouchableOpacity activeOpacity={0.85} onPress={togglePlayPause}>
-      <FontAwesome6
-        name={isPlaying ? 'pause' : 'play'}
-        size={size}
-        color={colors.iconPrimary}
-      />
-    </TouchableOpacity>
-  );
-};
+//   return (
+//     <TouchableOpacity activeOpacity={0.85} onPress={handleSkipToPrevious}>
+//       <MaterialCommunityIcons
+//         name={'skip-previous'}
+//         size={size}
+//         color={colors.iconPrimary}
+//       />
+//     </TouchableOpacity>
+//   );
+// };
 
-// Button to skip to the next track
-export const GoToForwardButton = ({ size = iconSizes.xl }) => {
-  const {colors} = useTheme();
-  const handleSkipToNext = async () => {
-    try {
-      await TrackPlayer.skipToNext(); // Skip to next track
-    } catch (error) {
-      console.error('Error skipping to next track:', error);
-    }
-  };
+// // Button to toggle between play and pause
+// export const PlayPauseButton = ({ size = iconSizes.lg }) => {
+//   const { colors } = useTheme();
+//   const [isPlaying, setIsPlaying] = useState(false); // Manages play/pause state
 
-  return (
-    <TouchableOpacity activeOpacity={0.85} onPress={handleSkipToNext}>
-      <MaterialCommunityIcons
-        name={'skip-next'}
-        size={size}
-        color={colors.iconPrimary}
-      />
-    </TouchableOpacity>
-  );
-};
+//   // Function to toggle between play and pause
+//   const togglePlayPause = async () => {
+//     try {
+//       if (isPlaying) {
+//         await MusicControl.pause(); // Pause using MediaPlayer in native code
+//         setIsPlaying(false);
+//       } else {
+//         await MusicControl.play(); // Play using MediaPlayer in native code
+//         setIsPlaying(true);
+//       }
+//     } catch (error) {
+//       console.error('Error toggling play/pause:', error);
+//     }
+//   };
 
-const styles = StyleSheet.create({});
+//   return (
+//     <TouchableOpacity activeOpacity={0.85} onPress={togglePlayPause}>
+//       <FontAwesome6
+//         name={isPlaying ? 'pause' : 'play'}
+//         size={size}
+//         color={colors.iconPrimary}
+//       />
+//     </TouchableOpacity>
+//   );
+// };
+
+// // Button to skip to the next track
+// export const GoToForwardButton = ({ size = iconSizes.xl }) => {
+//   const { colors } = useTheme();
+
+//   const handleSkipToNext = async () => {
+//     try {
+//       await MusicControl.skipToNext(); // Skip to next track via MediaPlayer
+//     } catch (error) {
+//       console.error('Error skipping to next track:', error);
+//     }
+//   };
+
+//   return (
+//     <TouchableOpacity activeOpacity={0.85} onPress={handleSkipToNext}>
+//       <MaterialCommunityIcons
+//         name={'skip-next'}
+//         size={size}
+//         color={colors.iconPrimary}
+//       />
+//     </TouchableOpacity>
+//   );
+// };
+
+// const styles = StyleSheet.create({});

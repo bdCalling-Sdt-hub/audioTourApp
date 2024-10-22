@@ -29,6 +29,9 @@ import SettingsScreen from '../screens/settings/SettingsScreen';
 import Play from '../screens/Play';
 import Story from '../screens/Story';
 import Settings from '../screens/Settings';
+import LikeScreen from '../screens/LikeScreent';
+import HomeScreen from '../screens/Home';
+import PlayerScreen from '../screens/PlayerScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -85,7 +88,8 @@ const BottomRoutes = (props: Props) => {
         },
       })}
     >
-      <Tab.Screen name="Featured" component={Home} />
+      <Tab.Screen name="Featured" component={HomeScreen} />
+      <Tab.Screen name="PlayerScreen" component={PlayerScreen} />
       <Tab.Screen name="Play" component={Play} />
       <Tab.Screen name="My Story" component={Story} />
       <Tab.Screen name="Settings" component={Settings} />

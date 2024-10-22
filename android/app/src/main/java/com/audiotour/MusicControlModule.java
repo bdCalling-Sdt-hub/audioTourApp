@@ -1,175 +1,183 @@
 package com.audiotour;
 
-import android.content.Context; // Ensure this import is added
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.content.Intent;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Build;
 import android.util.Log;
-
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
-public class MusicControlModule extends ReactContextBaseJavaModule {
-    private static MediaPlayer mediaPlayer;
-    private static String currentUrl;
-    private AudioManager audioManager;
-    private AudioFocusRequest audioFocusRequest;
+import java.util.ArrayList;
+import java.util.Collections;
 
-    public MusicControlModule(ReactApplicationContext context) {
-        super(context);
-        this.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+public class MusicControlModule extends ReactContextBaseJavaModule {
+   private MediaPlayer mediaPlayer;
+    private ArrayList<String> trackList = new ArrayList<>();  // Declare trackList
+    private int currentTrackIndex = 0;  // Initialize currentTrackIndex
+ private String currentTrackUrl;  // Declare currentTrackUrl
+
+ 
+    public MusicControlModule(ReactApplicationContext reactContext) {
+        super(reactContext);
     }
 
     @Override
     public String getName() {
-        return "MusicControlModule"; // This will be used in JavaScript
+        return "MusicControlModule";
     }
 
-    // Request audio focus for music playback
-    private boolean requestAudioFocus() {
-        int result;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                    .setOnAudioFocusChangeListener(this::onAudioFocusChange)
-                    .setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build())
-                    .build();
-            result = audioManager.requestAudioFocus(audioFocusRequest);
-        } else {
-            result = audioManager.requestAudioFocus(this::onAudioFocusChange, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        }
-        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
-    }
-
-    // Abandon audio focus after music playback is stopped
-    private void abandonAudioFocus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioManager.abandonAudioFocusRequest(audioFocusRequest);
-        } else {
-            audioManager.abandonAudioFocus(this::onAudioFocusChange);
-        }
-    }
-
-    private void onAudioFocusChange(int focusChange) {
-        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-            // Stop music if audio focus is lost
-            stop(null);
-        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-            // Pause music when focus is temporarily lost
-            pause(null);
-        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-            // Resume music if audio focus is regained
-            if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-                mediaPlayer.start();
-            }
-        }
-    }
-
-    // Method to play music
+    // Play a track from a dynamic URL
     @ReactMethod
-    public void play(final String url, final Promise promise) {
+    public void play(String url, Promise promise) {
         try {
-            // Request audio focus before playing music
-            if (!requestAudioFocus()) {
-                promise.reject("AudioFocusError", "Failed to gain audio focus");
-                return;
+            if (mediaPlayer != null) {
+                mediaPlayer.reset();
             }
 
-            // If a different URL is passed, stop and release the old media player
-            if (mediaPlayer != null && !url.equals(currentUrl)) {
-                mediaPlayer.stop();
-                mediaPlayer.release();
-                mediaPlayer = null;
-            }
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(url); // Set the dynamic URL
+            mediaPlayer.setLooping(false);
 
-            // Initialize the MediaPlayer if not already
-            if (mediaPlayer == null) {
-                mediaPlayer = new MediaPlayer();
-                mediaPlayer.setDataSource(url);
-                mediaPlayer.setLooping(true);
-                mediaPlayer.prepareAsync();  // Prepare asynchronously to avoid blocking UI
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mp.start();  // Start playing when prepared
-                        promise.resolve("Playing music from URL: " + url);
-                    }
-                });
-                mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                    @Override
-                    public boolean onError(MediaPlayer mp, int what, int extra) {
-                        promise.reject("PlaybackError", "Error occurred during playback: " + what);
-                        return true;
-                    }
-                });
-                currentUrl = url;
-                Log.d("MusicControlModule", "Playing music from URL: " + url);
-            } else {
-                mediaPlayer.start();  // Resume playback
-                promise.resolve("Resumed playing music");
-            }
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                    currentTrackUrl = url;  // Save the current track URL
+                    promise.resolve("Playing music from URL: " + url);
+                }
+            });
+
+            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    promise.reject("PlaybackError", "Error during playback: " + what);
+                    return true;
+                }
+            });
+
+            mediaPlayer.prepareAsync(); // Asynchronous preparation
         } catch (Exception e) {
             Log.e("MusicControlModule", "Error playing music", e);
             promise.reject("Error", "Error playing music: " + e.getMessage());
         }
     }
 
-    // Method to pause music
+
+// handle progress bar
+@ReactMethod
+public void getDuration(Promise promise) {
+    if (mediaPlayer != null) {
+        int duration = mediaPlayer.getDuration(); // Get the duration in milliseconds
+        promise.resolve(duration /1000);
+    } else {
+        promise.reject("Error", "Media player is not initialized.");
+    }
+}
+
+
+
+
+
+@ReactMethod
+public void getCurrentPosition(Promise promise) {
+    if (mediaPlayer != null) {
+        int currentPosition = mediaPlayer.getCurrentPosition(); // Get current position in milliseconds
+        promise.resolve(currentPosition / 1000);
+    } else {
+        promise.reject("Error", "Media player is not initialized.");
+    }
+}
+
+
+// volume
+@ReactMethod
+public void toggleMute(boolean isMute, Promise promise) {
+    if (mediaPlayer != null) {
+        if (isMute) {
+            mediaPlayer.setVolume(0f, 0f); // Mute both left and right channels
+        } else {
+            mediaPlayer.setVolume(1f, 1f); // Unmute
+        }
+        promise.resolve("Volume toggled");
+    } else {
+        promise.reject("Error", "MediaPlayer is not initialized");
+    }
+}
+
+
+// Shuffle the track list and play from the first track
     @ReactMethod
-    public void pause(final Promise promise) {
+    public void shuffleTracks(Promise promise) {
+        try {
+            if (trackList.size() > 1) {
+                Collections.shuffle(trackList); // Shuffle the track list
+                currentTrackIndex = 0;  // Reset to the first track after shuffling
+                String shuffledTrackUrl = trackList.get(currentTrackIndex); // Get the first shuffled track
+
+                play(shuffledTrackUrl, promise); // Play the shuffled track
+                promise.resolve("Track list shuffled and playing first track");
+            } else {
+                promise.reject("Error", "Not enough tracks to shuffle");
+            }
+        } catch (Exception e) {
+            Log.e("MusicControlModule", "Error shuffling tracks", e);
+            promise.reject("Error", "Error shuffling tracks: " + e.getMessage());
+        }
+    }
+
+    // Get the current track URL
+    @ReactMethod
+    public void getCurrentTrack(Promise promise) {
+        if (currentTrackIndex >= 0 && currentTrackIndex < trackList.size()) {
+            promise.resolve(trackList.get(currentTrackIndex));
+        } else {
+            promise.reject("Error", "No track available");
+        }
+    }
+
+
+    // Skip to the next track (URL passed dynamically from React Native)
+    @ReactMethod
+    public void skipToNext(String nextTrackUrl, Promise promise) {
+        if (nextTrackUrl != null && !nextTrackUrl.isEmpty()) {
+            play(nextTrackUrl, promise);
+        } else {
+            promise.reject("Error", "No next track URL provided");
+        }
+    }
+
+    // Skip to the previous track (URL passed dynamically from React Native)
+    @ReactMethod
+    public void skipToPrevious(String previousTrackUrl, Promise promise) {
+        if (previousTrackUrl != null && !previousTrackUrl.isEmpty()) {
+            play(previousTrackUrl, promise);
+        } else {
+            promise.reject("Error", "No previous track URL provided");
+        }
+    }
+
+    // Pause the music
+    @ReactMethod
+    public void pause(Promise promise) {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            if (promise != null) {
-                promise.resolve("Music paused");
-            }
-        } else if (promise != null) {
+            promise.resolve("Music paused");
+        } else {
             promise.reject("Error", "No music is playing to pause");
         }
     }
 
-    // Method to stop music
+    // Stop the music
     @ReactMethod
-    public void stop(final Promise promise) {
+    public void stop(Promise promise) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
-            currentUrl = null;
-            abandonAudioFocus();  // Abandon audio focus when stopped
-            if (promise != null) {
-                promise.resolve("Music stopped");
-            }
-        } else if (promise != null) {
+            currentTrackUrl = null;
+            promise.resolve("Music stopped");
+        } else {
             promise.reject("Error", "No music is playing to stop");
         }
-    }
-
-    // Method to start the foreground service
-    @ReactMethod
-    public void startForegroundService(String input) {
-        Intent serviceIntent = new Intent(getReactApplicationContext(), MusicService.class);
-        serviceIntent.putExtra("inputExtra", input);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getReactApplicationContext().startForegroundService(serviceIntent); // For Android O and above
-        } else {
-            getReactApplicationContext().startService(serviceIntent); // For lower versions
-        }
-    }
-
-    // Method to stop the foreground service
-    @ReactMethod
-    public void stopForegroundService() {
-        Intent serviceIntent = new Intent(getReactApplicationContext(), MusicService.class);
-        getReactApplicationContext().stopService(serviceIntent);
     }
 }
