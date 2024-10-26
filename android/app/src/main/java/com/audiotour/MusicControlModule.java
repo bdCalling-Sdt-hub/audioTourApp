@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class MusicControlModule extends ReactContextBaseJavaModule {
-   private MediaPlayer mediaPlayer;
-    private ArrayList<String> trackList = new ArrayList<>();  // Declare trackList
-    private int currentTrackIndex = 0;  // Initialize currentTrackIndex
- private String currentTrackUrl;  // Declare currentTrackUrl
+    private MediaPlayer mediaPlayer;
+    private ArrayList<String> trackList = new ArrayList<>();  // Track list to hold multiple URLs
+    private int currentTrackIndex = 0;  // Current track index for navigation
+    private String currentTrackUrl;  // Current track URL
 
- 
     public MusicControlModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -24,6 +23,19 @@ public class MusicControlModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "MusicControlModule";
+    }
+
+    // Set track list from JavaScript
+    @ReactMethod
+    public void setTrackList(ArrayList<String> tracks, Promise promise) {
+        try {
+            trackList.clear();
+            trackList.addAll(tracks);  // Update the track list dynamically
+            currentTrackIndex = 0;  // Reset to the first track
+            promise.resolve("Track list set successfully.");
+        } catch (Exception e) {
+            promise.reject("Error", "Failed to set track list: " + e.getMessage());
+        }
     }
 
     // Play a track from a dynamic URL
@@ -35,89 +47,88 @@ public class MusicControlModule extends ReactContextBaseJavaModule {
             }
 
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(url); // Set the dynamic URL
+            mediaPlayer.setDataSource(url);  // Set the dynamic URL
             mediaPlayer.setLooping(false);
 
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                    currentTrackUrl = url;  // Save the current track URL
-                    promise.resolve("Playing music from URL: " + url);
-                }
+            mediaPlayer.setOnPreparedListener(mp -> {
+                mp.start();
+                currentTrackUrl = url;  // Save the current track URL
+                promise.resolve("Playing music from URL: " + url);
             });
 
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    promise.reject("PlaybackError", "Error during playback: " + what);
-                    return true;
-                }
+            mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                promise.reject("PlaybackError", "Error during playback: " + what);
+                return true;
             });
 
-            mediaPlayer.prepareAsync(); // Asynchronous preparation
+            mediaPlayer.prepareAsync();  // Asynchronous preparation
         } catch (Exception e) {
             Log.e("MusicControlModule", "Error playing music", e);
             promise.reject("Error", "Error playing music: " + e.getMessage());
         }
     }
 
-
-// handle progress bar
-@ReactMethod
-public void getDuration(Promise promise) {
-    if (mediaPlayer != null) {
-        int duration = mediaPlayer.getDuration(); // Get the duration in milliseconds
-        promise.resolve(duration /1000);
-    } else {
-        promise.reject("Error", "Media player is not initialized.");
-    }
-}
-
-
-
-
-
-@ReactMethod
-public void getCurrentPosition(Promise promise) {
-    if (mediaPlayer != null) {
-        int currentPosition = mediaPlayer.getCurrentPosition(); // Get current position in milliseconds
-        promise.resolve(currentPosition / 1000);
-    } else {
-        promise.reject("Error", "Media player is not initialized.");
-    }
-}
-
-
-// volume
-@ReactMethod
-public void toggleMute(boolean isMute, Promise promise) {
-    if (mediaPlayer != null) {
-        if (isMute) {
-            mediaPlayer.setVolume(0f, 0f); // Mute both left and right channels
+    // Handle progress bar
+    @ReactMethod
+    public void getDuration(Promise promise) {
+        if (mediaPlayer != null) {
+            int duration = mediaPlayer.getDuration();  // Get the duration in milliseconds
+            promise.resolve(duration / 1000);  // Return duration in seconds
         } else {
-            mediaPlayer.setVolume(1f, 1f); // Unmute
+            promise.reject("Error", "Media player is not initialized.");
         }
-        promise.resolve("Volume toggled");
+    }
+
+    @ReactMethod
+    public void getCurrentPosition(Promise promise) {
+        if (mediaPlayer != null) {
+            int currentPosition = mediaPlayer.getCurrentPosition();  // Get current position in milliseconds
+            promise.resolve(currentPosition / 1000);  // Return position in seconds
+        } else {
+            promise.reject("Error", "Media player is not initialized.");
+        }
+    }
+
+// slider progress
+
+@ReactMethod
+public void seekTo(int position, Promise promise) {
+    if (mediaPlayer != null) {
+        mediaPlayer.seekTo(position);
+        promise.resolve("Seeked to position: " + position);
     } else {
-        promise.reject("Error", "MediaPlayer is not initialized");
+        promise.reject("Error", "Media player is not initialized.");
     }
 }
 
 
-// Shuffle the track list and play from the first track
+    // Toggle mute
+    @ReactMethod
+    public void toggleMute(boolean isMute, Promise promise) {
+        if (mediaPlayer != null) {
+            if (isMute) {
+                mediaPlayer.setVolume(0f, 0f);  // Mute both channels
+            } else {
+                mediaPlayer.setVolume(1f, 1f);  // Unmute
+            }
+            promise.resolve("Volume toggled.");
+        } else {
+            promise.reject("Error", "Media player is not initialized.");
+        }
+    }
+
+    // Shuffle the track list and play from the first track
     @ReactMethod
     public void shuffleTracks(Promise promise) {
         try {
             if (trackList.size() > 1) {
-                Collections.shuffle(trackList); // Shuffle the track list
+                Collections.shuffle(trackList);  // Shuffle the track list
                 currentTrackIndex = 0;  // Reset to the first track after shuffling
-                String shuffledTrackUrl = trackList.get(currentTrackIndex); // Get the first shuffled track
-
-                play(shuffledTrackUrl, promise); // Play the shuffled track
-                promise.resolve("Track list shuffled and playing first track");
+                String shuffledTrackUrl = trackList.get(currentTrackIndex);  // Get the first shuffled track
+                play(shuffledTrackUrl, promise);  // Play the shuffled track
+                promise.resolve("Track list shuffled and playing first track.");
             } else {
-                promise.reject("Error", "Not enough tracks to shuffle");
+                promise.reject("Error", "Not enough tracks to shuffle.");
             }
         } catch (Exception e) {
             Log.e("MusicControlModule", "Error shuffling tracks", e);
@@ -131,28 +142,29 @@ public void toggleMute(boolean isMute, Promise promise) {
         if (currentTrackIndex >= 0 && currentTrackIndex < trackList.size()) {
             promise.resolve(trackList.get(currentTrackIndex));
         } else {
-            promise.reject("Error", "No track available");
+            promise.reject("Error", "No track available.");
         }
     }
 
-
-    // Skip to the next track (URL passed dynamically from React Native)
+    // Skip to the next track
     @ReactMethod
-    public void skipToNext(String nextTrackUrl, Promise promise) {
-        if (nextTrackUrl != null && !nextTrackUrl.isEmpty()) {
-            play(nextTrackUrl, promise);
+    public void skipToNext(Promise promise) {
+        if (currentTrackIndex < trackList.size() - 1) {
+            currentTrackIndex++;
+            play(trackList.get(currentTrackIndex), promise);
         } else {
-            promise.reject("Error", "No next track URL provided");
+            promise.reject("Error", "No next track available.");
         }
     }
 
-    // Skip to the previous track (URL passed dynamically from React Native)
+    // Skip to the previous track
     @ReactMethod
-    public void skipToPrevious(String previousTrackUrl, Promise promise) {
-        if (previousTrackUrl != null && !previousTrackUrl.isEmpty()) {
-            play(previousTrackUrl, promise);
+    public void skipToPrevious(Promise promise) {
+        if (currentTrackIndex > 0) {
+            currentTrackIndex--;
+            play(trackList.get(currentTrackIndex), promise);
         } else {
-            promise.reject("Error", "No previous track URL provided");
+            promise.reject("Error", "No previous track available.");
         }
     }
 
@@ -161,9 +173,9 @@ public void toggleMute(boolean isMute, Promise promise) {
     public void pause(Promise promise) {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            promise.resolve("Music paused");
+            promise.resolve("Music paused.");
         } else {
-            promise.reject("Error", "No music is playing to pause");
+            promise.reject("Error", "No music is playing to pause.");
         }
     }
 
@@ -175,9 +187,9 @@ public void toggleMute(boolean isMute, Promise promise) {
             mediaPlayer.release();
             mediaPlayer = null;
             currentTrackUrl = null;
-            promise.resolve("Music stopped");
+            promise.resolve("Music stopped.");
         } else {
-            promise.reject("Error", "No music is playing to stop");
+            promise.reject("Error", "No music is playing to stop.");
         }
     }
 }

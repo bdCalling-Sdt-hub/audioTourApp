@@ -124,11 +124,11 @@ const AudioTrackPlayer: React.FC<AudioTrackPlayerProps> = ({
       {/* Progress bar */}
       <View>
         <Text>{formatTime(progress.position)} / {formatTime(progress.duration)}</Text>
-        <ProgressBar
+        {/* <ProgressBar
           progress={progress.position}
           buffered={progress.buffered}
           duration={progress.duration}
-        />
+        /> */}
       </View>
     </View>
   );

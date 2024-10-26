@@ -69,10 +69,10 @@ const PlayerProgressBar = () => {
           height: 7,
           borderRadius: spacing.sm,
         }}
-        theme={{
-          maximumTrackTintColor: colors.maximumTintcolor,
-          minimumTrackTintColor: colors.minimumTintcolor,
-        }}
+        // theme={{
+        //   maximumTrackTintColor: colors.maximumTintcolor,
+        //   minimumTrackTintColor: colors.minimumTintcolor,
+        // }}
         progress={progress}
         minimumValue={min}
         maximumValue={max}

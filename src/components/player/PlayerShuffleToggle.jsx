@@ -28,7 +28,7 @@
 // export default PlayerShuffleToggle;
 
 // const styles = StyleSheet.create({});
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { iconSizes } from '../../constants/dimensions';
@@ -42,9 +42,18 @@ const PlayerShuffleToggle = () => {
   // Function to shuffle songs using the native shuffleTracks method
   const shuffleSongs = async () => {
     try {
-      await MusicControlModule.shuffleTracks();  // Call the native shuffle method
+      // Get the current track list
+      const trackList = await MusicControlModule.getTrackList();
+
+      // Check if there are enough tracks to shuffle
+      if (trackList.length > 1) {
+        await MusicControlModule.shuffleTracks();  // Call the native shuffle method
+      } else {
+        Alert.alert('Error', 'Not enough tracks to shuffle.');
+      }
     } catch (error) {
       console.error('Error shuffling tracks:', error);
+      Alert.alert('Error', 'Failed to shuffle tracks.');
     }
   };
 

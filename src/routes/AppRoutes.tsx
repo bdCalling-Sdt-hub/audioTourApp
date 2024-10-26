@@ -19,6 +19,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import PlayerScreen from '../screens/PlayerScreen';
 import LikeScreen from '../screens/LikeScreent';
 import CustomDrawerContent from '../components/CustomDrawercontent';
+import SplashScreen from '../screens/SplashScreen';
 
 // Create the stack and drawer navigators
 const Stack = createNativeStackNavigator();
@@ -28,6 +29,7 @@ const StackNavigator: React.FC = () => (
   <Stack.Navigator
     initialRouteName="login"
     screenOptions={{headerShown: false}}>
+    <Stack.Screen name="splash" component={SplashScreen} />
     <Stack.Screen name="login" component={Login} />
     <Stack.Screen name="signUp" component={SignUp} />
     <Stack.Screen name="forgetPassword" component={ForgetPassword} />

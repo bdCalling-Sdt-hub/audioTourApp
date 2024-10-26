@@ -1,3 +1,8 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-native",  // Enable JSX for React Native
+    "strict": true,         // Optional: Enable strict type-checking
+    "esModuleInterop": true // Optional: Enable interop with CommonJS modules
+  }
 }

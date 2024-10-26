@@ -36,7 +36,7 @@ const FloatingPlayer = ({ }) => {
   return (
     <View>
       <View style={{ zIndex: 1 }}>
-        <Slider
+        {/* <Slider
           theme={{
             minimumTrackTintColor: colors.minimumTintcolor,
             maximumTrackTintColor: colors.maximumTintcolor,
@@ -61,7 +61,7 @@ const FloatingPlayer = ({ }) => {
           progress={progress}
           minimumValue={min}
           maximumValue={max}
-        />
+        /> */}
       </View>
 
       {/* Display the selected song dynamically */}
