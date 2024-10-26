@@ -144,20 +144,19 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
 
   const hancleBackwithTime = async () => {
     try {
-      // Get the current playback position
-      const currentPosition = await MusicControl.getCurrentPosition(); // Should be in milliseconds
+      // Get the current playback position in seconds
+      const currentPosition = await MusicControlModule.getCurrentPosition();
   
-      // Calculate the new position, 10 seconds back
-      const newPosition = Math.max(currentPosition - 10000, 0); // Ensures it doesn't go below 0
+      // Calculate new position, 10 seconds back, converted to milliseconds
+      const newPosition = Math.max((currentPosition * 1000) - 10000, 0);
   
       // Seek to the new position
-      await MusicControl.seekTo(newPosition);
+      await MusicControlModule.seekTo(newPosition);
     } catch (error) {
       console.error("Error rewinding track:", error);
       Alert.alert("Error", "Unable to rewind track by 10 seconds");
     }
   };
-  
   
 
   const currentTrack = trackList[currentTrackIndex];
@@ -203,13 +202,6 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
             size={iconSizes.lg}
           />
       
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.volumeWrapper} onPress={toggleVolume}>
-          <Feather
-            name={isMute ? 'volume-x' : 'volume-1'}
-            color={colors.iconSecondary}
-            size={iconSizes.lg}
-          />
         </TouchableOpacity>
 
         <View style={styles.repeatShuffleWrapper}>
