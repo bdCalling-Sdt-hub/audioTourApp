@@ -1,7 +1,9 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+
+import React, {useState} from 'react';
 import tw from '../../lib/tailwind';
 import InputText from '../../components/inputs/InputText';
+import CheckBox from '@react-native-community/checkbox';
 import {
   IconCloseEye,
   IconFacebook,
@@ -11,19 +13,22 @@ import {
   IconOpenEye,
   IconUser,
 } from '../../assets/icons/icons';
-import { Checkbox } from 'react-native-ui-lib';
 import Button from '../../components/buttons/Button';
-import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '../../navigation/types'; // Import the navigation types
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProps} from '../../navigation/types'; // Import the navigation types
+import {SvgXml} from 'react-native-svg';
+
+// Remove this import as you are already using @react-native-community/checkbox
+// import { Checkbox } from 'react-native-ui-lib';
 
 const SignUp = () => {
   const [isHidePassword, setIsHidePassword] = useState(true);
-  const [check, setCheck] = useState(false);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const navigation = useNavigation<NavigationProps>();
 
-  const handleLogin = () => {
-    navigation.navigate('login'); // Correctly typed navigation
+  const handleSignup = () => {
+    navigation.navigate('otpVerification'); // Correctly typed navigation
   };
 
   const handlePrimaryLanguage = () => {
@@ -31,33 +36,20 @@ const SignUp = () => {
   };
 
   return (
-    <ScrollView style={tw`p-[4%] bg-primaryBase h-full`}>
-      <Text style={tw`text-center text-primary text-3xl font-LexDecaBold`}>
-       Audio Tour
-      </Text>
-
+    <ScrollView
+      contentContainerStyle={tw`p-[4%] bg-white h-full items-center justify-center`}>
       {/* form */}
       <View style={tw`mt-8`}>
-       
-          <Text style={tw`text-3xl font-LexDecaBold text-primary200`}>
-            Create account
-          </Text>
-      
-        <Text style={tw`text-sm font-LexDecaRegular text-primary300 mt-1`}>
-          Give Us some of your information to get free access
+        <Text style={tw`text-3xl text-textPrimary font-bold text-center`}>
+          Sign up
         </Text>
-        <View style={tw`mt-8 gap-y-4`}>
-          <View style={tw`h-14`}>
-            <InputText
-              floatingPlaceholder
-              svgFirstIcon={IconUser}
-              placeholder="Full Name"
-              style={tw`text-white`}
-              focusStyle={tw`border-primary`}
-            />
-          </View>
+        <Text style={tw`text-sm text-center text-textSecondary mt-1`}>
+          Log In with your data that you entered during your registration
+        </Text>
 
-          <View style={tw`h-14`}>
+        <View style={tw`mt-8 gap-y-4 `}>
+          {/* Email Input */}
+          <View style={tw`h-12 border border-primaryBase rounded-2xl `}>
             <InputText
               floatingPlaceholder
               svgFirstIcon={IconMail}
@@ -67,7 +59,8 @@ const SignUp = () => {
             />
           </View>
 
-          <View style={tw`h-14`}>
+          {/* Password Input */}
+          <View style={tw`h-12 border border-primaryBase rounded-2xl `}>
             <InputText
               floatingPlaceholder
               svgFirstIcon={IconLock}
@@ -79,54 +72,56 @@ const SignUp = () => {
               focusStyle={tw`border-primary`}
             />
           </View>
-          <Text style={tw`text-darkSub text-xs font-LexDecaMedium`}>
-            Password needs to be at least 8 characters long and contain at least 1 number and 1 symbol
-          </Text>
 
-          <TouchableOpacity
-            style={tw`my-5 flex-row flex-1 items-center`}
-            onPress={() => {
-              setCheck(!check);
-            }}
-          >
-            <Checkbox
-              color="#00cffd"
-              iconColor="#121221"
-              size={28}
-              style={tw`rounded-lg`}
-              borderRadius={8}
-              value={check}
-              outline={false}
-              onValueChange={value => setCheck(value)}
+          {/* CheckBox for Terms */}
+          <View style={tw`flex-row items-center gap-2`}>
+            <CheckBox
+            onCheckColor={toggleCheckBox ? "#0187D1" : "#D1D1D1"}
+            onFillColor="#0187D1"
+            tintColor="#0187D1"
+              value={toggleCheckBox}
+              onValueChange={newValue => setToggleCheckBox(newValue)}
             />
-            <Text style={tw`ml-4 font-LexDecaRegular text-sm text-primary300`}>
-              By creating an account you agree to the Terms of Use and our Privacy policy
-            </Text>
-          </TouchableOpacity>
-          <Button onPress={handlePrimaryLanguage} title="Create Account" />
 
-          <View style={tw`flex-row justify-center items-center mt-2`}>
-            <Text style={tw`font-LexDecaRegular text-sm text-offWhite text-center`}>
-              Already have an account?{' '}
+            <Text style={tw`text-xs text-textSecondary`}>
+              I agree to the Terms and Conditions
             </Text>
-            <TouchableOpacity onPress={handleLogin}>
-              <Text style={tw`font-LexDecaRegular text-sm text-primary50`}>Log In</Text>
-            </TouchableOpacity>
           </View>
 
-          <View style={tw`my-4 w-full border-b border-b-inputBorder`} />
+          {/* Password instructions */}
+          <Text style={tw`text-darkSub text-xs font-LexDecaMedium py-2`}>
+            Password needs to be at least 8 characters long. Contain at least 1
+            number and 1 symbol.
+          </Text>
+
+          {/* Sign Up Button */}
           <Button
-            title="Continue with Google"
-            firstSvg={IconGoogle}
-            textStyle={tw`text-primary200`}
-            containerStyle={tw`bg-transparent border-inputBorder`}
+            containerStyle={tw`border-0 bg-primaryBase`}
+            textStyle={tw`text-white font-bold`}
+            onPress={handleSignup}
+            title="Sign up"
           />
-          <Button
-            title="Continue with Facebook"
-            firstSvg={IconFacebook}
-            textStyle={tw`text-primary200`}
-            containerStyle={tw`bg-transparent border-inputBorder`}
-          />
+
+          <View style={tw`flex-row justify-between items-center px-[6%]`}>
+            <View style={tw`border-b-primaryBase border-b-2 w-36`} />
+            <Text>or</Text>
+            <View style={tw`border-b-primaryBase border-b-2 w-36`} />
+          </View>
+
+          <View style={tw`flex-row flex mx-auto gap-4`}>
+            <SvgXml xml={IconGoogle} />
+            <Text style={tw`text-textPrimary`}>Continue with Google</Text>
+          </View>
+
+          {/* Sign Up Link */}
+          <View style={tw`flex-row justify-center items-center mt-2`}>
+            <Text style={tw`text-sm text-textSecondary text-center`}>
+              Don't have an account?{' '}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('login')}>
+              <Text style={tw`text-sm text-primary50`}>Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ScrollView>

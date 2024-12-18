@@ -2,15 +2,15 @@ import { RecommendedSongs } from "./Songs";
 
 export const songWithCategory = [
   {
-    title: 'Recommended for you',
+    title: 'Featured',
     songs: RecommendedSongs,
   },
   {
-    title: 'New Release',
+    title: 'EI Morro (English tour)',
     songs: RecommendedSongs,
   },
   {
-    title: 'NCS Songs',
+    title: 'EI Morro (English tour)',
     songs: RecommendedSongs,
   },
 ];

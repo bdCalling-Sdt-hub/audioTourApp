@@ -12,7 +12,7 @@ import {useTheme} from '@react-navigation/native';
 import SongCardWithCategory from '../components/player/SongCardWithCategory';
 
 
-const HomeScreen = () => {
+const Home = () => {
   const {colors} = useTheme();
   // const [selectedSong, setSelectedSong] = useState(null);
   // console.log("Selected Song", selectedSong);
@@ -38,6 +38,7 @@ const HomeScreen = () => {
   // );
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
+      
       <Header />
       <FlatList
         data={songWithCategory}
@@ -55,7 +56,7 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

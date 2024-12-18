@@ -1,49 +1,41 @@
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import { View, Text, ScrollView, StatusBar } from 'react-native';
+import React, { useState } from 'react';
 import tw from '../../lib/tailwind';
 import InputText from '../../components/inputs/InputText';
-import {
-  IconCloseEye,
-  IconFacebook,
-  IconGoogle,
-  IconLock,
-  IconMail,
-  IconOpenEye,
-  IconSuccessTik,
-  IconUser,
-  successIocn,
-} from '../../assets/icons/icons';  
-import {Checkbox} from 'react-native-ui-lib';
+import { IconCloseEye, IconLock, IconMail, IconOpenEye } from '../../assets/icons/icons';
 import Button from '../../components/buttons/Button';
-import NormalModal from '../../components/modal/NormalModal';
-import {SvgXml} from 'react-native-svg';
+import Header from '../../components/header/Header';
+import { useNavigation } from '@react-navigation/native';
 
-const NewPassword = () => {
+const ForgetPassword = () => {
+  const navigation = useNavigation();
   const [isHidePassword, setIsHidePassword] = useState(true);
-  const [successModal, setSuccessModal] = useState(false);
+
+  // Handle OTP Verification Navigation
+  const handleOtpVerification = () => {
+    navigation.navigate('otpVerification'); // Corrected the function call syntax
+  };
+
   return (
-    <ScrollView style={tw`p-[4%] bg-primaryBase h-full`}>
-      <Text style={tw`text-center text-primary text-3xl font-LexDecaBold`}>
-        Audio Tour
-      </Text>
-
-      {/* form */}
+    <ScrollView contentContainerStyle={tw`p-[4%] bg-white h-full items-center justify-center`}>
+            {/* Form Section */}
       <View style={tw`mt-8`}>
-        <Text style={tw`text-[20px] font-LexDecaBold text-primary200`}>
-          New Password
+        {/* Forgot Password Heading */}
+        <Text style={tw`text-[20px] font-bold text-center text-textPrimary`}>
+        Create new password
         </Text>
-        <Text style={tw`text-sm font-LexDecaRegular text-primary300 mt-1`}>
-          We’ve sent a verification code to the
+        <Text style={tw`text-sm text-textSecondary mt-1`}>
+        You have to create a new password if you forget your password.
         </Text>
-        <Text style={tw`text-sm font-LexDecaRegular text-primary50 mt-1`}>
-          alm...@gmail.com
-        </Text>
+      
+
+        {/* Email Input Field */}
         <View style={tw`mt-8 gap-y-4`}>
-          <View style={tw`h-14`}>
+        <View style={tw`h-12 border border-primaryBase rounded-2xl `}>
             <InputText
               floatingPlaceholder
               svgFirstIcon={IconLock}
-              placeholder="Craete New password"
+              placeholder="Enter new password"
               svgSecondIcon={isHidePassword ? IconCloseEye : IconOpenEye}
               secureTextEntry={isHidePassword}
               onPress={() => setIsHidePassword(!isHidePassword)}
@@ -51,11 +43,11 @@ const NewPassword = () => {
               focusStyle={tw`border-primary`}
             />
           </View>
-          <View style={tw`h-14`}>
+        <View style={tw`h-12 border border-primaryBase rounded-2xl `}>
             <InputText
               floatingPlaceholder
               svgFirstIcon={IconLock}
-              placeholder="Confirm Password"
+              placeholder="Enter comfirm password"
               svgSecondIcon={isHidePassword ? IconCloseEye : IconOpenEye}
               secureTextEntry={isHidePassword}
               onPress={() => setIsHidePassword(!isHidePassword)}
@@ -64,33 +56,13 @@ const NewPassword = () => {
             />
           </View>
 
-          <Button
-            title="Update Password"
-            containerStyle={tw`mt-8`}
-            onPress={() => setSuccessModal(true)}
-          />
-          <NormalModal
-            layerContainerStyle={tw`flex-1 justify-center items-center mx-5`}
-            containerStyle={tw`rounded-3xl bg-inputBorder p-5`}
-            visible={successModal}
-            setVisible={setSuccessModal}>
-            <View style={tw`items-center`}>
-              <SvgXml xml={successIocn} />
-              <Text
-                style={tw`text-primary200 font-LexDecaBold text-[20px] mt-6`}>
-                Password update successfully
-              </Text>
-              <Button
-                title="Done"
-                containerStyle={tw`mt-12 w-full bg-success border-success`}
-                onPress={() => setSuccessModal(false)}
-              />
-            </View>
-          </NormalModal>
+          {/* Submit Button */}
+          <Button containerStyle={tw`bg-primaryBase border-0`} textStyle={tw`text-white`} onPress={()=>navigation.navigate('login')} title="Login" />
         </View>
       </View>
+      <StatusBar translucent={false}/>
     </ScrollView>
   );
 };
 
-export default NewPassword;
+export default ForgetPassword;

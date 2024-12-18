@@ -10,6 +10,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { fontFamilies } from '../constants/fonts';
 import { DrawerNavigationProp, useTheme } from '@react-navigation/native';
 import { useThemeStore } from '../store/ThemeStore';
+import { AboutusIcon, FaqIcon, IconEdit, IconLeftArrow, leftArrow, LogoutIcon, PrivacyPolicyIcon, TermsAndConditionIcon } from '../assets/icons/icons';
+import { SvgXml } from 'react-native-svg';
 
 // Define the type for navigation props
 type CustomDrawerContentProps = {
@@ -37,43 +39,55 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = (props) => {
       {/* Menu item container */}
       <View style={styles.drawerItemContainer}>
         <DrawerItem
-          label={'Profile'}
-          icon={() => <FontAwesome name={'user'} size={iconSizes.md} color={colors.iconPrimary} />}
+          label={'About us'}
+          icon={() => (
+            <SvgXml xml={AboutusIcon} width={25} height={25}/>
+          )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-        />
-        <DrawerItem
-          label={'Liked Item'}
-          icon={() => <AntDesign name={'hearto'} size={iconSizes.md} color={colors.iconPrimary} />}
-          labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
-          style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('LIKE_SCREEN')}
-        />
-        <DrawerItem
-          label={'Language'}
-          icon={() => <FontAwesome name={'language'} size={iconSizes.md} color={colors.iconPrimary} />}
-          labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
-          style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('LANGUAGE_SCREEN')}
-        />
-        <DrawerItem
-          label={'Contact Us'}
-          icon={() => <FontAwesome name={'envelope-o'} size={iconSizes.md} color={colors.iconPrimary} />}
-          labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
-          style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('CONTACT_US_SCREEN')}
+          onPress={() => props.navigation.navigate('Aboutus')}
         />
         <DrawerItem
           label={'FAQ'}
-          icon={() => <FontAwesome name={'question-circle-o'} size={iconSizes.md} color={colors.iconPrimary} />}
+          icon={() => (
+            <SvgXml xml={FaqIcon} width={25} height={25}/>
+          )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('FAQ_SCREEN')}
+          onPress={() => props.navigation.navigate('faq')}
         />
         <DrawerItem
-          label={'Settings'}
-          icon={() => <FontAwesome name={'cog'} size={iconSizes.md} color={colors.iconPrimary} />}
+          label={'Privacy Policy'}
+          icon={() => (
+            <SvgXml xml={PrivacyPolicyIcon} width={25} height={25}/>
+          )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
+          style={styles.drawerItem}
+          onPress={() => props.navigation.navigate('PrivacyPolicy')}
+        />
+        <DrawerItem
+          label={'Terms & conditions'}
+          icon={() => (
+            <SvgXml xml={TermsAndConditionIcon} width={25} height={25}/>
+          )}
+          labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
+          style={styles.drawerItem}
+          onPress={() => props.navigation.navigate('TermsAndCondition')}
+        />
+        <DrawerItem
+          label={'Change password'}
+          icon={() => <SvgXml xml={IconEdit} width={25} height={25 }/>}
+          labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
+          style={styles.drawerItem}
+          onPress={() => props.navigation.navigate('ChangePassword')}
+        />
+        <DrawerItem
+          label={'Logout'}
+       
+          icon={() => (
+            <SvgXml xml={LogoutIcon} width={25} height={25}/> // Customize size and color as needed
+          )}
+          labelStyle={[styles.labelStyle, { color: 'red'}]}
           style={styles.drawerItem}
           onPress={() => props.navigation.navigate('SETTINGS_SCREEN')}
         />
