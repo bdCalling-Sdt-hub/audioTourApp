@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">audioTour</string>
+    <string name="com.google.android.geo.API_KEY" translatable="false">AIzaSyBOx-P4WZSYeCYMbWa37lP7QMVVSuip9sc</string>
 </resources>

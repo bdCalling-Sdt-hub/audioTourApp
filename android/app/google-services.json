@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "599371693321",
+    "project_id": "cars-doctor-41b93",
+    "storage_bucket": "cars-doctor-41b93.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599371693321:android:7f5483bc819af4e4c8a7d8",
+        "android_client_info": {
+          "package_name": "com.audiotour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599371693321-2h3efd0bubvoi5vq600j571cp4fdq2oe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9Mt9CUf0pb8zkGpoe4XKL-UGFdCZBU34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599371693321-2h3efd0bubvoi5vq600j571cp4fdq2oe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
