@@ -31,6 +31,7 @@ type RootStackParamList = {
 
 // Native Modules for Music Control
 const { MusicControlModule } = NativeModules;
+console.log("34 ====", MusicControlModule.play)
 
 interface MusicControlModuleType {
   startForegroundService: (url: string) => Promise<void>;
@@ -87,7 +88,7 @@ const SongCardWithCategory: React.FC<SongCardWithCategoryProps> = ({ item }) => 
       startMusicService(selectedTrack.url);
 
       // Navigate to Player screen to show the current playing track and pass the entire track list
-      navigation.navigate('PlayerScreen', {
+      navigation.navigate('SrotyPreview', {
         selectedTrack: selectedTrack,
         trackList: trackList, // Pass the entire track list
       });

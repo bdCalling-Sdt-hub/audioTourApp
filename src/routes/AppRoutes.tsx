@@ -35,6 +35,8 @@ import SuccessScreen from '../screens/SuccessScreen';
 import FaqScreen from '../screens/FaqScreen';
 import Aboutus from '../screens/Aboutus';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
+import { useSetupTrackPlayer } from '../hooks/useSetupTrackPlayer.';
+import { AppState } from 'react-native';
 
 // Create the stack and drawer navigators
 const Stack = createNativeStackNavigator();
@@ -42,7 +44,8 @@ const Drawer = createDrawerNavigator();
 
 const StackNavigator: React.FC = () => (
   <Stack.Navigator
-    initialRouteName="login"
+  
+    initialRouteName="splash"
     screenOptions={{headerShown: false}}>
     <Stack.Screen name="splash" component={SplashScreen} />
     <Stack.Screen name="OnboardingScreen1" component={OnboardingScreen1} />
@@ -57,7 +60,7 @@ const StackNavigator: React.FC = () => (
     <Stack.Screen name="newPassword" component={NewPassword} />
     <Stack.Screen name="termsCondition" component={TermsAndConditions} />
     <Stack.Screen name="faq" component={Faq} />
-    <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
+    {/* <Stack.Screen name="PlayerScreen" component={PlayerScreen} /> */}
     <Stack.Screen name="EnjoyThreeFreeAudio" component={EnjoyThreeAudiosFree} />
     <Stack.Screen name="SrotyPreview" component={StoryPreview} />
     <Stack.Screen name="MyStories" component={MyStories} />
@@ -76,17 +79,39 @@ const StackNavigator: React.FC = () => (
 
 const AppRoutes: React.FC = () => {
   useEffect(() => {
-    setupPlayer();
+    const initializePlayer = async () => {
+      if (AppState.currentState === 'active') {
+        try {
+          await setupPlayer();
+        } catch (error) {
+          console.error('Error during TrackPlayer setup:', error);
+        }
+      } else {
+        console.warn('TrackPlayer can only be set up when the app is in the foreground.');
+      }
+    };
+
+    initializePlayer();
   }, []);
 
   const setupPlayer = async () => {
     await TrackPlayer.setupPlayer();
     console.log('Track player setup successfully');
   };
+  // useEffect(() => {
+  //   setupPlayer();
+  // }, []);
 
+  // const setupPlayer = async () => {
+  //   await TrackPlayer.setupPlayer();
+  //   console.log('Track player setup successfully');
+  // };
+  // const onLoad = () => {
+  //   console.log('track player setup success...');
+  // };
   // Apply Tailwind configuration
   useDeviceContext(tw);
-
+  // useSetupTrackPlayer({onLoad});
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>

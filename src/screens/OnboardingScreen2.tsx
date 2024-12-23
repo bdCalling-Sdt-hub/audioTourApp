@@ -6,10 +6,13 @@ import Button from '../components/buttons/Button'
 type Props = {}
 
 const OnboardingScreen2 = ({navigation}) => {
+
   return (
-    <ScrollView contentContainerStyle={tw`flex-1 items-center justify-center bg-white px-[4%]`}>
-      <View style={tw`mt-12`}>
-        <Image source={require('../assets/imgages/Onboarding2imgGroup.png')}/>
+    <ScrollView contentContainerStyle={tw`flex-grow items-center justify-center bg-white px-[4%]`}>
+      <View style={tw`mt-4`}>
+        <Image 
+        style={{ width: 320, height: 320, resizeMode: 'contain' }}
+        source={require('../assets/imgages/Onboarding2imgGroup.png')}/>
       </View>
       <View>
         <Text style={tw`font-bold text-textPrimary text-2xl text-center py-12 `}>Welocome, Explorer</Text>

@@ -42,6 +42,7 @@ const Login = () => {
   };
   const handleLogin = () => {
     navigation.navigate('BottomHome');
+    // navigation.navigate('splash');
   };
   return (
     <ScrollView contentContainerStyle={tw`p-[4%] bg-white h-full items-center justify-center`}>

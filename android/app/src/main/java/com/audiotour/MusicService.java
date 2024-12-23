@@ -30,34 +30,29 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String input = intent.getStringExtra("inputExtra");
-        String audioSource = intent.getStringExtra("audioSource");  // Added: source of the audio (URL or local)
+        String audioSource = intent.getStringExtra("audioSource");
 
-        createNotificationChannel(); // Create the notification channel for Android O and above
+        createNotificationChannel();
 
-        // Intent to launch the MainActivity when clicking on the notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Build the notification
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Music Service")
                 .setContentText(input != null ? input : "Playing background music")
-                .setSmallIcon(R.mipmap.ic_launcher) // Use your app icon here
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .build();
 
-        // Start the service in the foreground with the notification
         startForeground(1, notification);
 
-        // Check if the mediaPlayer is already initialized
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
         } else {
-            mediaPlayer.reset(); // Reset in case we are reusing the mediaPlayer
+            mediaPlayer.reset();
         }
 
         if (audioSource != null) {
-            // Check if it's a URL or an asset file
             if (audioSource.startsWith("http") || audioSource.startsWith("https")) {
                 playFromUrl(audioSource);
             } else {
@@ -67,19 +62,16 @@ public class MusicService extends Service {
             Log.e("MusicService", "No audio source provided.");
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     private void playFromUrl(String url) {
         try {
-            mediaPlayer.setDataSource(url);  // Set URL for media
-            mediaPlayer.prepareAsync();  // Prepare the media asynchronously
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();  // Start playing music once prepared
-                    Log.d("MusicService", "Playing music from URL: " + url);
-                }
+            mediaPlayer.setDataSource(url);
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(mp -> {
+                mp.start();
+                Log.d("MusicService", "Playing music from URL: " + url);
             });
         } catch (IOException e) {
             Log.e("MusicService", "Error playing music from URL", e);
@@ -90,8 +82,8 @@ public class MusicService extends Service {
         try {
             AssetFileDescriptor afd = getAssets().openFd(assetPath);
             mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-            mediaPlayer.prepare();  // Prepare the media synchronously
-            mediaPlayer.start();  // Start playing music
+            mediaPlayer.prepare();
+            mediaPlayer.start();
             Log.d("MusicService", "Playing music from assets: " + assetPath);
         } catch (IOException e) {
             Log.e("MusicService", "Error playing music from assets", e);
@@ -101,7 +93,6 @@ public class MusicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Stop and release the media player when the service is destroyed
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
@@ -124,7 +115,7 @@ public class MusicService extends Service {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
                     "Music Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_LOW
             );
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {

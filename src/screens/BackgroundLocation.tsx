@@ -22,7 +22,7 @@ const BackgroundLocation = ({ navigation }) => {
         {/* Button */}
         <View style={tw``}>
           <Button
-            onPress={() => navigation.navigate('BackgroundLocation')}
+            onPress={() => navigation.navigate('login')}
             containerStyle={tw`bg-[#0187D1] border-0 px-24 h-14 mx-auto my-12 items-center justify-center`}
             title="Set Location permission"
             textStyle={tw`text-white border-b-white border-b-2`}

@@ -14,46 +14,46 @@ import SongCardWithCategory from '../components/player/SongCardWithCategory';
 
 const Home = () => {
   const {colors} = useTheme();
-  // const [selectedSong, setSelectedSong] = useState(null);
-  // console.log("Selected Song", selectedSong);
+  const [selectedSong, setSelectedSong] = useState(null);
+  console.log("18 Selected Song", selectedSong);
   // function to handle song selection
-  // const handleSongSelect = (song) => {
-  //   setSelectedSong(song);
-  // }
-  // return (
-  //   <View style={[styles.container, {backgroundColor: colors.background}]}>
-  //     <Header />
-  //     <FlatList  data={songWithCategory} renderItem={({item})=> <SongCardWithCategory
-  //     item={item}
-  //     onSelect={(song) => handleSongSelect(song)}
-  //     />}
-  //     contentContainerStyle={{
-  //       paddingBottom: 400,
-  //     }}
-  //     />
-  //     {/* conditionally render the floatingPlayer if a song is selected */}
-  //     {selectedSong && <FloatingPlayer song={selectedSong} />}
-
-  //   </View>
-  // );
+  const handleSongSelect = (song) => {
+    setSelectedSong(song);
+  }
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      
       <Header />
-      <FlatList
-        data={songWithCategory}
-        renderItem={({item}) => <SongCardWithCategory item={item}/>}
-        contentContainerStyle={{
-          paddingBottom: 400,
-        }}
-        
+      <FlatList  data={songWithCategory} renderItem={({item})=> <SongCardWithCategory
+      item={item}
+      onSelect={(song) => handleSongSelect(song)}
+      />}
+      contentContainerStyle={{
+        paddingBottom: 400,
+      }}
       />
-     
-     {/* <FloatingPlayer/>
-      */}
-    
+      {/* conditionally render the floatingPlayer if a song is selected */}
+      {selectedSong && <FloatingPlayer song={selectedSong} />}
+
     </View>
   );
+  // return (
+  //   <View style={[styles.container, {backgroundColor: colors.background}]}>
+      
+  //     <Header />
+  //     <FlatList
+  //       data={songWithCategory}
+  //       renderItem={({item}) => <SongCardWithCategory item={item}/>}
+  //       contentContainerStyle={{
+  //         paddingBottom: 400,
+  //       }}
+        
+  //     />
+     
+  //    {/* <FloatingPlayer/>
+  //     */}
+    
+  //   </View>
+  // );
 };
 
 export default Home;
