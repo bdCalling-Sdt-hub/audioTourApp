@@ -31,7 +31,7 @@ type RootStackParamList = {
 
 // Native Modules for Music Control
 const { MusicControlModule } = NativeModules;
-console.log("34 ====", MusicControlModule.play)
+
 
 interface MusicControlModuleType {
   startForegroundService: (url: string) => Promise<void>;

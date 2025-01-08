@@ -22,9 +22,11 @@
         android:allowBackup="false"
         android:theme="@style/AppTheme"
         android:supportsRtl="true">
+        <!-- android:value="AIzaSyBNEIke2SRWsmiDiLuTFn9GG3PSaErmKEE"  -->
 <meta-data
     android:name="com.google.android.geo.API_KEY"
-     android:value="AIzaSyBNEIke2SRWsmiDiLuTFn9GG3PSaErmKEE" 
+     android:value="AIzaSyC84mj3YlqcaBWRyi1pxloQ4n3JcbL93XY" 
+     
       />
     
     <!-- android:value="AIzaSyBOx-P4WZSYeCYMbWa37lP7QMVVSuip9sc" /> -->
