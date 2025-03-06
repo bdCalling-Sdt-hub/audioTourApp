@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, Image, Alert} from 'react-native';
 import React, {useState} from 'react';
 import tw from '../../lib/tailwind';
 import InputText from '../../components/inputs/InputText';
@@ -16,6 +16,8 @@ import Button from '../../components/buttons/Button';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SvgXml} from 'react-native-svg';
+import { useLoginUserMutation } from '../../redux/apiSlices/authSlice';
+import { setStorageToken } from '../../utils/utils';
 
 // Define the types for your navigation routes
 type RootStackParamList = {
@@ -33,17 +35,43 @@ type LoginScreenNavigationProp = StackNavigationProp<
 
 const Login = () => {
   const [isHidePassword, setIsHidePassword] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [login, {isLoading, isError}] = useLoginUserMutation()
 
+  console.log("email password", email, password)
   // Use typed navigation for better safety
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
   const handleForgetPassword = () => {
     navigation.navigate('forgetPassword');
   };
-  const handleLogin = () => {
-    navigation.navigate('BottomHome');
-    // navigation.navigate('splash');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Please fill in all fields');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('email', email); 
+    formData.append('password', password);
+  
+    console.log('FormData before sending:', formData);
+  
+    try {
+      const res = await login(formData).unwrap(); 
+      if(res?.access_token){
+        setStorageToken(res?.access_token);
+        navigation?.replace('LoadingSplash');
+      }
+     
+      console.log('Login successful:', res);
+     
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
+  
   return (
     <ScrollView contentContainerStyle={tw`p-[4%] bg-white h-full items-center justify-center`}>
       {/* form */}
@@ -59,10 +87,12 @@ const Login = () => {
           {/* Email Input */}
           <View style={tw`h-12 border border-primaryBase rounded-2xl `}>
             <InputText
+            
               floatingPlaceholder
               svgFirstIcon={IconMail}
               placeholder="Your E-mail"
-              style={tw`text-white`}
+              style={tw`text-black`}
+              onChangeText={(text)=> setEmail(text)}
               focusStyle={tw`border-primary`}
             />
           </View>
@@ -76,7 +106,8 @@ const Login = () => {
               svgSecondIcon={isHidePassword ? IconCloseEye : IconOpenEye}
               secureTextEntry={isHidePassword}
               onPress={() => setIsHidePassword(!isHidePassword)}
-              style={tw`text-white`}
+              onChangeText={(text)=> setPassword(text)}
+              style={tw`text-black`}
               focusStyle={tw`border-primary`}
             />
           </View>

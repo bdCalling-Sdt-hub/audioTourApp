@@ -17,9 +17,9 @@ import TrackPlayer from 'react-native-track-player';
 const imgUrl =
   'https://linkstorage.linkfire.com/medialinks/images/711c0296-c883-4444-9bd4-341dcab24d0b/artwork-440x440.jpg'; // Fallback image URL
 
-const FloatingPlayer = ({ }) => {
+const FloatingPlayer = ({ navigation}) => {
   const {colors} = useTheme();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const progress = useSharedValue(0.25);
   const min = useSharedValue(0);
   const max = useSharedValue(1);
@@ -29,7 +29,7 @@ const FloatingPlayer = ({ }) => {
 
   // Handle navigating to the player screen
   const handleOpenPlayerScreen = () => {
-    navigation.navigate('PLAYER_SCREEN');
+    navigation.navigate('Player');
     
   };
 

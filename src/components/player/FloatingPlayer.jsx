@@ -29,14 +29,14 @@ const FloatingPlayer = ({ }) => {
 
   // Handle navigating to the player screen
   const handleOpenPlayerScreen = () => {
-    navigation.navigate('PLAYER_SCREEN');
+    navigation.navigate('Player');
     
   };
 
   return (
     <View>
-      <View style={{ zIndex: 1 }}>
-        {/* <Slider
+      <View style={{ zIndex: 5 }}>
+        <Slider
           theme={{
             minimumTrackTintColor: colors.minimumTintcolor,
             maximumTrackTintColor: colors.maximumTintcolor,
@@ -61,7 +61,7 @@ const FloatingPlayer = ({ }) => {
           progress={progress}
           minimumValue={min}
           maximumValue={max}
-        /> */}
+        />
       </View>
 
       {/* Display the selected song dynamically */}

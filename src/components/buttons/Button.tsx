@@ -7,6 +7,7 @@ interface ButtonProps {
   title: string;
   onPress?: () => void;
   containerStyle?: any;
+  style?: any;
   textStyle?: any;
   firstSvg?: any;
   textRightIcon?: any;
@@ -14,6 +15,7 @@ interface ButtonProps {
 const Button = ({
   title,
   containerStyle,
+  style,
   textStyle,
   firstSvg,
   onPress,
@@ -23,7 +25,7 @@ const Button = ({
     <TouchableOpacity
       style={[
         tw`bg-primary py-4 rounded-2xl flex-row items-center justify-center gap-4 border`,
-        containerStyle,
+        containerStyle, style,
       ]}
       onPress={onPress}>
       {firstSvg && <SvgXml xml={firstSvg} />}

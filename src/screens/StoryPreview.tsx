@@ -78,7 +78,7 @@ import {NavigProps} from '../interfaces/NaviProps';
 
 const StoryPreview = ({navigation, route}: NavigProps<string>) => {
   // Extract selectedTrack and trackList from route.params
-  const {selectedTrack, trackList} = route.params || {};
+  const {selectedTrack, trackList} = route?.params || {};
 
   return (
     <ScrollView contentContainerStyle={tw`flex-1`}>

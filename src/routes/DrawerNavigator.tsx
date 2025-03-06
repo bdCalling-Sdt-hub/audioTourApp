@@ -20,6 +20,7 @@ const DrawerNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false, // Disable default headers to allow for custom headers
         drawerType: 'slide',  // Drawer slides from the side
+        swipeEdgeWidth: 0,
         drawerStyle: {
           backgroundColor: '#fff',  // Set custom background color for drawer
         },

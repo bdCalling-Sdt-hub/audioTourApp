@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer'; // Drawer Navigator
 import {NavigationContainer} from '@react-navigation/native';
@@ -35,8 +35,14 @@ import SuccessScreen from '../screens/SuccessScreen';
 import FaqScreen from '../screens/FaqScreen';
 import Aboutus from '../screens/Aboutus';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
-import { useSetupTrackPlayer } from '../hooks/useSetupTrackPlayer.';
-import { AppState } from 'react-native';
+import useTrackPlayer, { useSetupTrackPlayer } from '../hooks/useSetupTrackPlayer.';
+import { AppState, useColorScheme } from 'react-native';
+import { useThemeStore } from '../store/ThemeStore';
+import useLikedSongs from '../store/LikeStore';
+import { setupPlayer } from 'react-native-track-player/lib/src/trackPlayer';
+import { Provider } from 'react-redux';
+import store from '../redux/store';
+import LoadingSplash from '../screens/LoadingSplashScreen';
 
 // Create the stack and drawer navigators
 const Stack = createNativeStackNavigator();
@@ -45,16 +51,13 @@ const Drawer = createDrawerNavigator();
 const StackNavigator: React.FC = () => (
   <Stack.Navigator
   
-    initialRouteName="splash"
+    initialRouteName="LoadingSplash"
     screenOptions={{headerShown: false}}>
-    <Stack.Screen name="splash" component={SplashScreen} />
-    <Stack.Screen name="OnboardingScreen1" component={OnboardingScreen1} />
-    <Stack.Screen name="OnboardingScreen2" component={OnboardingScreen2} />
-    <Stack.Screen name="AllowNotification" component={AllowNotification} />
-    <Stack.Screen name="BackgroundPermission" component={BackgroundPermission} />
-    <Stack.Screen name="BackgroundLocation" component={BackgroundLocation} />
+    
+    <Stack.Screen name="LoadingSplash" component={LoadingSplash} />
     <Stack.Screen name="login" component={Login} />
     <Stack.Screen name="signUp" component={SignUp} />
+   
     <Stack.Screen name="forgetPassword" component={ForgetPassword} />
     <Stack.Screen name="otpVerification" component={OtpVerification} />
     <Stack.Screen name="newPassword" component={NewPassword} />
@@ -78,43 +81,26 @@ const StackNavigator: React.FC = () => (
 );
 
 const AppRoutes: React.FC = () => {
-  useEffect(() => {
-    const initializePlayer = async () => {
-      if (AppState.currentState === 'active') {
-        try {
-          await setupPlayer();
-        } catch (error) {
-          console.error('Error during TrackPlayer setup:', error);
-        }
-      } else {
-        console.warn('TrackPlayer can only be set up when the app is in the foreground.');
-      }
-    };
-
-    initializePlayer();
-  }, []);
-
-  const setupPlayer = async () => {
-    await TrackPlayer.setupPlayer();
-    console.log('Track player setup successfully');
-  };
-  // useEffect(() => {
-  //   setupPlayer();
-  // }, []);
-
-  // const setupPlayer = async () => {
-  //   await TrackPlayer.setupPlayer();
-  //   console.log('Track player setup successfully');
-  // };
-  // const onLoad = () => {
-  //   console.log('track player setup success...');
-  // };
-  // Apply Tailwind configuration
   useDeviceContext(tw);
-  // useSetupTrackPlayer({onLoad});
+ 
+//   const onLoad = () => {
+//     console.log('track player setup..');
+//   }
+//  useSetupTrackPlayer({onLoad});
+
+ 
+  const {isDarkMode, toggleTheme} = useThemeStore();
+  const scheme = useColorScheme()
+  const {loadLikedSongs} = useLikedSongs();
+  useEffect(() => {
+    loadLikedSongs();
+    scheme === "light" ? toggleTheme(false) : toggleTheme(true)
+  }, [scheme]);
+  
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
+        <Provider store={store}>
         <SafeAreaView style={tw`flex-1`}>
           <NavigationContainer>
             <Drawer.Navigator
@@ -128,6 +114,8 @@ const AppRoutes: React.FC = () => {
             </Drawer.Navigator>
           </NavigationContainer>
         </SafeAreaView>
+        </Provider>
+       
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

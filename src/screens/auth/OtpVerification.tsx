@@ -13,7 +13,7 @@ import { NavigProps } from '../../interfaces/NaviProps';
 
 
 const OtpVerificaton = ({navigation}: NavigProps<null>) => {
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(60); // 60 seconds countdown
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const OtpVerificaton = ({navigation}: NavigProps<null>) => {
           We have sent 4 digits code into your email account.
           </Text>
 
-          <View style={tw`flex-row justify-between items-center w-[80%] mx-auto`}>
+          <View style={tw`flex-row justify-between items-center w-[90%] mx-auto`}>
             {renderInputs()}
           </View>
 
@@ -83,11 +83,11 @@ const OtpVerificaton = ({navigation}: NavigProps<null>) => {
             </Text>
           ) : (
             <TouchableOpacity>
-              <Text style={tw`mt-5 text-black font-MontserratRegular`}>
+              <Text style={tw`mt-5 px-[4%] text-black font-MontserratRegular`}>
                 Didn’t received code?{' '}
                 <Text style={tw` text-blue-800 border-b-2 border-b-blue-700`}>
                   Send again
-                </Text>{' '}
+                </Text>
               </Text>
             </TouchableOpacity>
           )}
@@ -97,11 +97,12 @@ const OtpVerificaton = ({navigation}: NavigProps<null>) => {
           style={tw`z-2 flex mx-auto mb-0 top-0 items-center justify-center px-[4%]`}>
           <View style={tw`my-2 flex items-center justify-center mx-auto`}>
             <Button
+            style={tw`w-80`}
               onPress={() => navigation?.navigate('WelcomeScreen')}
               titleStyle={tw`text-white font-MontserratBold text-center mx-auto`}
               title="Verify"
               textStyle={tw`text-white`}
-              containerStyle={tw`bg-primaryBase px-36 border-0 my-2 rounded-full`}
+              containerStyle={tw`bg-primaryBase  border-0 my-2 rounded-full`}
             />
           </View>
         </View>

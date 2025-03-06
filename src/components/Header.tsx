@@ -38,9 +38,9 @@ const Header: React.FC = () => {
           source={require('../assets/imgages/SplashLgo.png')}
         />
         <View style={tw`flex-row gap-2`}>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <SvgXml xml={GlobeIcon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={toggleDrawer}>
             <SvgXml xml={KibupIcon} />
           </TouchableOpacity>

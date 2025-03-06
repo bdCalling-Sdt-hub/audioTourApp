@@ -135,3 +135,133 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
 });
+
+// SongCardWithCategory Component
+// import { FlatList, StyleSheet, Text, View } from 'react-native';
+// import React from 'react';
+// import SongCard from './SongCard';
+// import { fontSizes, spacing } from '../../constants/dimensions';
+// import { fontFamilies } from '../../constants/fonts';
+// import TrackPlayer from 'react-native-track-player';
+// import { useTheme } from '@react-navigation/native';
+
+// interface Track {
+//   url: string;
+//   title?: string; // Optional property
+// }
+// interface Song {
+//   id: string;
+//   title: string;
+//   artist: string;
+//   url: string;
+//   artwork?: string;
+// }
+
+// interface SongCategoryItem {
+//   title: string;
+//   songs: Song[];
+// }
+
+// interface SongCardWithCategoryProps {
+//   item: SongCategoryItem;
+//   onSelect: (song: Song) => void; // Add the onSelect prop
+// }
+// const SongCardWithCategory: React.FC<SongCardWithCategoryProps> = ({ item, onSelect }) => {
+//   const { colors } = useTheme();
+
+//   // Create a function to play a song in the queue
+// //   const handlePlayTrack = async (selectedTrack, songs= item?.song) => {
+// //     // const songs: Track[] = item.songs;
+// //     console.log("songs++", songs)
+// //    console.log("selected Track+++",selectedTrack)
+// //    const trackIndex = songs.findIndex((track) => track.url === selectedTrack.url);
+    
+// // console.log("trackindex songCardWithCategory", trackIndex)
+// //     if (trackIndex === -1) {
+// //       console.warn('Track not found in the queue.');
+// //       return;
+// //     }
+
+// //     const beforeTracks = songs.slice(0, trackIndex);
+// //     console.log("beforeTrack", beforeTracks)
+// //     const afterTracks = songs.slice(trackIndex + 1);
+// //     console.log("afterTrack",)
+
+// //     try {
+// //       await TrackPlayer.reset();
+// //       await TrackPlayer.add(selectedTrack);
+// //       await TrackPlayer.add(afterTracks);
+// //       await TrackPlayer.add(beforeTracks);
+// //       await TrackPlayer.play();
+// //     } catch (error) {
+// //       console.error('Error while playing track:', error);
+// //     }
+// //   };
+// const handlePlayTrack = async (selectedTrack: Song, songs: Song[]) => {
+//   console.log("songs++", songs);
+//   console.log("selected Track+++", selectedTrack);
+
+//   const trackIndex = songs.findIndex((track) => track.url === selectedTrack.url);
+
+//   console.log("trackindex songCardWithCategory", trackIndex);
+//   if (trackIndex === -1) {
+//     console.warn("Track not found in the queue.");
+//     return;
+//   }
+
+//   const beforeTracks = songs.slice(0, trackIndex);
+//   console.log("beforeTrack", beforeTracks);
+//   const afterTracks = songs.slice(trackIndex + 1);
+//   console.log("afterTrack", afterTracks);
+
+//   try {
+//     await TrackPlayer.reset();
+//     await TrackPlayer.add(selectedTrack);
+//     await TrackPlayer.add(afterTracks);
+//     await TrackPlayer.add(beforeTracks);
+//     await TrackPlayer.play();
+//   } catch (error) {
+//     console.error("Error while playing track:", error);
+//   }
+// };
+
+//   return (
+//     <View style={styles.container}>
+//       <Text style={[styles.headingText, { color: colors.textPrimary }]}>
+//         {item?.title}
+//       </Text>
+//       <FlatList
+//         data={item.songs}
+//         renderItem={({ item: song }) => (
+//           <SongCard
+//             item={song}
+//             containerStyle={{ margin: spacing.sm }}
+//             imageStyle={{ borderRadius: 10 }}
+//             handlePlay={(selectedTrack) => handlePlayTrack(selectedTrack, item.songs)}
+//           />
+//         )}
+//         horizontal={true}
+//         ItemSeparatorComponent={<View style={{ marginHorizontal: spacing.sm }} />}
+//         contentContainerStyle={{
+//           paddingHorizontal: spacing.lg,
+//         }}
+//         showsHorizontalScrollIndicator={false}
+//         showsVerticalScrollIndicator={false}
+//       />
+//     </View>
+//   );
+// };
+
+// export default SongCardWithCategory;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   headingText: {
+//     fontSize: fontSizes.lg,
+//     fontFamily: fontFamilies.bold,
+//     paddingVertical: spacing.lg,
+//     paddingHorizontal: spacing.lg,
+//   },
+// });

@@ -12,19 +12,25 @@ import { DrawerNavigationProp, useTheme } from '@react-navigation/native';
 import { useThemeStore } from '../store/ThemeStore';
 import { AboutusIcon, FaqIcon, IconEdit, IconLeftArrow, leftArrow, LogoutIcon, PrivacyPolicyIcon, TermsAndConditionIcon } from '../assets/icons/icons';
 import { SvgXml } from 'react-native-svg';
+import { removeStorageToken } from '../utils/utils';
 
 // Define the type for navigation props
 type CustomDrawerContentProps = {
   navigation: DrawerNavigationProp<any>;
 };
 
-const CustomDrawerContent: React.FC<CustomDrawerContentProps> = (props) => {
+const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) => {
   const { isDarkMode, toggleTheme } = useThemeStore();
   const { colors } = useTheme();
 
   const closeDrawer = () => {
     props.navigation.closeDrawer(); // Properly closes the drawer
   };
+
+  const handleLogout = () => {
+    removeStorageToken()
+    navigation?.navigate('LoadingSplash');
+  }
 
   return (
     <DrawerContentScrollView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -89,7 +95,7 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = (props) => {
           )}
           labelStyle={[styles.labelStyle, { color: 'red'}]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('SETTINGS_SCREEN')}
+          onPress={handleLogout}
         />
       </View>
     </DrawerContentScrollView>
