@@ -43,6 +43,7 @@ import { setupPlayer } from 'react-native-track-player/lib/src/trackPlayer';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
 import LoadingSplash from '../screens/LoadingSplashScreen';
+import MapOnListScreen from '../screens/MapOnListScreen';
 
 // Create the stack and drawer navigators
 const Stack = createNativeStackNavigator();
@@ -55,6 +56,12 @@ const StackNavigator: React.FC = () => (
     screenOptions={{headerShown: false}}>
     
     <Stack.Screen name="LoadingSplash" component={LoadingSplash} />
+    <Stack.Screen name="OnboardingScreen1" component={OnboardingScreen1} />
+    <Stack.Screen name="OnboardingScreen2" component={OnboardingScreen2} />
+    <Stack.Screen name="AllowNotification" component={AllowNotification} />
+    <Stack.Screen name="BackgroundPermission" component={BackgroundPermission} />
+    <Stack.Screen name="BackgroundLocation" component={BackgroundLocation} />
+    
     <Stack.Screen name="login" component={Login} />
     <Stack.Screen name="signUp" component={SignUp} />
    
@@ -74,6 +81,7 @@ const StackNavigator: React.FC = () => (
     <Stack.Screen name="Aboutus" component={Aboutus} />
     <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     <Stack.Screen name="TermsAndCondition" component={TermsAndConditions} />
+  <Stack.Screen name="MapOnList" component={MapOnListScreen} />
 
     
     <Stack.Screen name="BottomHome" component={BottomRoutes} />

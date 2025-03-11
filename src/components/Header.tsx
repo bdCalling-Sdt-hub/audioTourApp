@@ -15,7 +15,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {iconSizes, spacing} from '../constants/dimensions';
 import {useNavigation, DrawerNavigationProp} from '@react-navigation/native';
 import {SvgXml} from 'react-native-svg';
-import {GlobeIcon, KibupIcon} from '../assets/icons/icons';
+import {GlobeIcon, IconNotification, KibupIcon} from '../assets/icons/icons';
 import tw from '../lib/tailwind';
 
 // Define the type for navigation (assuming Drawer navigation is used)
@@ -35,12 +35,12 @@ const Header: React.FC = () => {
       <View style={tw`flex-row items-center justify-between px-[4%]`}>
         <Image
           style={tw`w-28 h-12 my-4`}
-          source={require('../assets/imgages/SplashLgo.png')}
+          source={require('../assets/imgages/PuetroRicoLogo.png')}
         />
-        <View style={tw`flex-row gap-2`}>
-          {/* <TouchableOpacity>
-            <SvgXml xml={GlobeIcon} />
-          </TouchableOpacity> */}
+        <View style={tw`flex-row gap-4`}>
+          <TouchableOpacity>
+            <SvgXml xml={IconNotification} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={toggleDrawer}>
             <SvgXml xml={KibupIcon} />
           </TouchableOpacity>

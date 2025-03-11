@@ -23,23 +23,23 @@ const LoadingSplash = ({navigation}) => {
       if (res?.token_status === true) {
         (navigation as any)?.replace('BottomHome');
       } else {
-        (navigation as any)?.replace('login');
+        (navigation as any)?.replace('OnboardingScreen1');
       }
     } catch (error) {
       console.log("28", error);
-      (navigation as any)?.replace('login');
+      (navigation as any)?.replace('OnboardingScreen1');
     }
   };
   React.useEffect(() => {
     if (token) {
       handleCheckValidToken();
     } else {
-      (navigation as any)?.replace('login');
+      (navigation as any)?.replace('OnboardingScreen1');
     }
   }, []);
 
   return (
-    <View style={tw`flex-1 w-full bg-primary justify-center items-center`}>
+    <View style={tw`flex-1 w-full bg-white justify-center items-center`}>
       <FastImage
         style={tw`w-28 h-28 flex-1 `}
         resizeMode={FastImage.resizeMode.contain}

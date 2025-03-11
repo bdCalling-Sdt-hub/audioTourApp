@@ -10,12 +10,17 @@ import {
 import React, {useState} from 'react';
 import tw from '../lib/tailwind';
 import Button from '../components/buttons/Button';
-import notifee from '@notifee/react-native';
+import notifee, { AndroidImportance } from '@notifee/react-native';
+
+
+
+
 
 type Props = {};
 
 const AllowNotification = ({navigation}) => {
   const [permissionGranted, setPermissionGranted] = useState(false);
+  console.log("permitions", permissionGranted)
 
   // Function to handle notification permission
   const handleNotificationPermission = async () => {
@@ -45,9 +50,11 @@ const AllowNotification = ({navigation}) => {
     await notifee.createChannel({
       id: 'default',
       name: 'Default Channel',
-      importance: notifee.AndroidImportance.HIGH,
+      importance: AndroidImportance.HIGH, // Fix applied here
+      // importance: notifee?.AndroidImportance.HIGH, // Fix applied here
     });
   };
+  
 
   return (
     <ScrollView contentContainerStyle={tw`bg-white`}>

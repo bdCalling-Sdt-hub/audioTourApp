@@ -79,6 +79,8 @@ import {NavigProps} from '../interfaces/NaviProps';
 const StoryPreview = ({navigation, route}: NavigProps<string>) => {
   // Extract selectedTrack and trackList from route.params
   const {selectedTrack, trackList} = route?.params || {};
+  console.log("storyPreview1", selectedTrack)
+  console.log("storyPreview2", trackList)
 
   return (
     <ScrollView contentContainerStyle={tw`flex-1`}>
@@ -92,16 +94,16 @@ const StoryPreview = ({navigation, route}: NavigProps<string>) => {
       <View style={tw`w-full`}>
         {/* Show track image or fallback */}
         <Image
-          style={tw`w-full`}
+          style={tw`w-[100%] h-42 object-cover`}
           source={
-            selectedTrack?.image
-              ? {uri: selectedTrack.image}
+            selectedTrack?.artwork
+              ? {uri: selectedTrack?.artwork}
               : require('../assets/imgages/StoryOnClick.png') // Fallback image
           }
         />
         <View style={tw`flex-row justify-between py-4 mx-[6%] border-b-gray-300 border-b-2`}>
-          <Text style={tw`text-textPrimary`}>
-            {selectedTrack?.location || 'Unknown Location'}
+          <Text style={tw`text-textPrimary text-xl font-bold`}>
+            {selectedTrack?.language || 'Unknown Location'}
           </Text>
           <TouchableOpacity onPress={() => navigation?.navigate('Player', {selectedTrack, trackList})}>
             <SvgXml xml={PlayButton} width={25} height={25} />
@@ -111,7 +113,7 @@ const StoryPreview = ({navigation, route}: NavigProps<string>) => {
 
       <View style={tw`p-[4%]`}>
         <Text style={tw`text-primaryBase`}>
-          {selectedTrack?.description || 'Puerto Rico Audio Tours production'}
+          {selectedTrack?.title || 'Puerto Rico Audio Tours production'}
         </Text>
         <View style={tw`flex-row gap-4 items-center py-1`}>
           <SvgXml xml={locationIndicator} width={15} height={15} />

@@ -18,7 +18,7 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
   extraOptions,
 ) => {
   const token = getStorageToken();
-  console.log("token at baseapi", token)
+  // console.log("token at baseapi", token)
 
   try {
     const result: AxiosResponse = await axios({
@@ -74,7 +74,8 @@ export const api = createApi({
   endpoints: () => ({}),
   tagTypes: [
     'user',
-    'notification'
+    'notification',
+    'map'
   ],
 });
 

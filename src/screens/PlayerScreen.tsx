@@ -73,17 +73,18 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
   const { selectedTrack, trackList } = route.params || {};
+  console.log("playerScreen", selectedTrack?.audio_file)
   const progress = useSharedValue(30);
   const min = useSharedValue(0);
   const max = useSharedValue(100);
   useEffect(() => {
     if (selectedTrack && trackList) {
       const selectedTrackIndex = trackList.findIndex(
-        (track) => track.url === selectedTrack.url
+        (track) => track?.audio_file === selectedTrack?.audio_file
       );
       if (selectedTrackIndex !== -1) {
         setCurrentTrackIndex(selectedTrackIndex);
-        playMusic(selectedTrack.url);
+        playMusic(selectedTrack?.audio_file);
       }
     }
     // // newly added
@@ -91,6 +92,7 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
   }, [selectedTrack, trackList]);
 
   if (!selectedTrack || !trackList || trackList.length === 0) {
+    console.log("++++++++95", selectedTrack)
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>No track selected or track list is empty</Text>
@@ -212,10 +214,10 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
       
         </TouchableOpacity>
 
-        <View style={styles.repeatShuffleWrapper}>
+        {/* <View style={styles.repeatShuffleWrapper}>
           <PlayerRepeatToggle />
           <PlayerShuffleToggle />
-        </View>
+        </View> */}
       </View>
 
       <PlayerProgressBar />

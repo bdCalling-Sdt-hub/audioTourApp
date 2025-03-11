@@ -24,7 +24,7 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) =
   const { colors } = useTheme();
 
   const closeDrawer = () => {
-    props.navigation.closeDrawer(); // Properly closes the drawer
+    navigation.closeDrawer(); // Properly closes the drawer
   };
 
   const handleLogout = () => {
@@ -38,9 +38,9 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) =
         <TouchableOpacity onPress={closeDrawer}>
           <AntDesign name={'close'} color={colors.iconPrimary} size={iconSizes.lg} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => toggleTheme()}>
+        {/* <TouchableOpacity onPress={() => toggleTheme()}>
           <Octicons name={isDarkMode ? 'sun' : 'moon'} color={colors.iconPrimary} size={iconSizes.lg} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {/* Menu item container */}
       <View style={styles.drawerItemContainer}>
