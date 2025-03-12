@@ -1,74 +1,130 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import tw from '../../lib/tailwind';
 import InputText from '../../components/inputs/InputText';
 import CheckBox from '@react-native-community/checkbox';
-import { IconCloseEye, IconFacebook, IconGoogle, IconLock, IconMail, IconOpenEye, IconUser } from '../../assets/icons/icons';
+import {
+  IconCloseEye,
+  IconFacebook,
+  IconGoogle,
+  IconLock,
+  IconMail,
+  IconOpenEye,
+  IconUser,
+} from '../../assets/icons/icons';
 import Button from '../../components/buttons/Button';
-import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '../../navigation/types';
-import { SvgXml } from 'react-native-svg';
-import { useRegisterUserMutation } from '../../redux/apiSlices/authSlice';
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProps} from '../../navigation/types';
+import {SvgXml} from 'react-native-svg';
+import {useRegisterUserMutation} from '../../redux/apiSlices/authSlice';
 import LinearGradient from 'react-native-linear-gradient';
+import {PermissionsAndroid} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import { getStorageToken, lStorage } from '../../utils/utils';
 
 interface SignupDataProps {
   fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
- 
 }
 
 const SignUp = () => {
+  const [deviceId, setDeviceId] = useState('');
   const [isHidePassword, setIsHidePassword] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [registerUser, { isLoading, isError }] = useRegisterUserMutation();
+  const [registerUser, {isLoading, isError}] = useRegisterUserMutation();
   const [signupData, setSignupData] = useState<SignupDataProps>({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
-  
   });
 
-  console.log('Signup data', signupData);
-
+  // console.log('devicId', deviceId);
   const navigation = useNavigation<NavigationProps>();
 
   const handleSignup = async () => {
+    const fcmtoken = lStorage.getString('fcmToken')
+    console.log("fcmToken", fcmtoken)
     try {
-      // const formData = new FormData();
-      // formData.append('full_name', signupData.fullName);
-      // formData.append('email', signupData.email);
-      // formData.append('password', signupData.password);
-      // formData.append('password_confirmation', signupData.confirmPassword);
       const formData = {
         full_name: signupData.fullName,
         email: signupData.email,
         password: signupData.password,
         password_confirmation: signupData.confirmPassword,
       };
-      
-      // Debugging logs
-      console.log("Sending request with data:", signupData);
-      
+
+      console.log('Sending request with data:', signupData);
+
       const res = await registerUser(formData).unwrap();
       console.log('Signup response:', res);
-      
+
       if (res?.success) {
         navigation.navigate('otpVerification', {email: signupData?.email});
       }
     } catch (error) {
-      console.error("Signup error:", error);
+      console.error('Signup error:', error);
     }
   };
-  
-  
 
+  // const requestPhoneStatePermission = async () => {
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE
+  //     );
+
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       console.log('Phone state permission granted');
+  //     } else {
+  //       Alert.alert('Permission Denied', 'Phone state permission is required to proceed.');
+  //     }
+  //   } catch (err) {
+  //     console.warn(err);
+  //   }
+  // };
+  const requestPhoneStatePermission = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
+    );
+
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('Phone state permission granted');
+      // Handle the logic after permission is granted
+    } else {
+      console.log('Phone state permission denied');
+      // Handle the logic for denied permission
+    }
+  };
+  // const checkPhoneStatePermission = async () => {
+  //   const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE);
+
+  //   if (hasPermission) {
+  //     console.log('Phone state permission granted');
+  //   } else {
+  //     console.log('Phone state permission not granted');
+  //   }
+  // };
+  const fetchDeviceId = async () => {
+    try {
+      const id = await DeviceInfo.getUniqueId();
+      setDeviceId(id);
+    } catch (error) {
+      Alert.alert('Error', 'Unable to fetch device information');
+    }
+    fetchDeviceId();
+  };
+  // useEffect(() => {
+  //   requestPhoneStatePermission();
+  //   fetchDeviceId();
+  // }, []);
   return (
-    <ScrollView contentContainerStyle={tw`p-[4%] bg-white h-full items-center justify-center`}>
+    <ScrollView
+      contentContainerStyle={tw`p-[4%] bg-white h-full items-center justify-center`}>
       <View style={tw`mt-8`}>
-        <Text style={tw`text-3xl text-textPrimary font-bold text-center`}>Sign up</Text>
+        <Text style={tw`text-3xl text-textPrimary font-bold text-center`}>
+          Sign up
+        </Text>
         <Text style={tw`text-sm text-center text-textSecondary mt-1`}>
           Log In with your data that you entered during your registration
         </Text>
@@ -76,8 +132,8 @@ const SignUp = () => {
         <View style={tw`mt-8 gap-y-4 `}>
           <View style={tw`h-12 border border-primaryBase rounded-2xl`}>
             <InputText
-              onChangeText={(text) =>
-                setSignupData((prev) => ({
+              onChangeText={text =>
+                setSignupData(prev => ({
                   ...prev,
                   fullName: text,
                 }))
@@ -92,8 +148,8 @@ const SignUp = () => {
 
           <View style={tw`h-12 border border-primaryBase rounded-2xl`}>
             <InputText
-              onChangeText={(text) =>
-                setSignupData((prev) => ({
+              onChangeText={text =>
+                setSignupData(prev => ({
                   ...prev,
                   email: text,
                 }))
@@ -108,8 +164,8 @@ const SignUp = () => {
 
           <View style={tw`h-12 border border-primaryBase rounded-2xl`}>
             <InputText
-              onChangeText={(text) =>
-                setSignupData((prev) => ({
+              onChangeText={text =>
+                setSignupData(prev => ({
                   ...prev,
                   password: text,
                 }))
@@ -127,8 +183,8 @@ const SignUp = () => {
 
           <View style={tw`h-12 border border-primaryBase rounded-2xl`}>
             <InputText
-              onChangeText={(text) =>
-                setSignupData((prev) => ({
+              onChangeText={text =>
+                setSignupData(prev => ({
                   ...prev,
                   confirmPassword: text,
                 }))
@@ -150,14 +206,18 @@ const SignUp = () => {
               onFillColor="#0187D1"
               tintColor="#0187D1"
               value={toggleCheckBox}
-              onValueChange={(value) => {
-                setToggleCheckBox(value)}}
+              onValueChange={value => {
+                setToggleCheckBox(value);
+              }}
             />
-            <Text style={tw`text-xs text-textSecondary`}>I agree to the Terms and Conditions</Text>
+            <Text style={tw`text-xs text-textSecondary`}>
+              I agree to the Terms and Conditions
+            </Text>
           </View>
 
           <Text style={tw`text-darkSub text-xs font-LexDecaMedium py-2`}>
-            Password needs to be at least 8 characters long, contain at least 1 number and 1 symbol.
+            Password needs to be at least 8 characters long, contain at least 1
+            number and 1 symbol.
           </Text>
 
           <Button

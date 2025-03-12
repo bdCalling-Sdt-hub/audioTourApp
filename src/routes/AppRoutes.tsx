@@ -44,6 +44,7 @@ import { Provider } from 'react-redux';
 import store from '../redux/store';
 import LoadingSplash from '../screens/LoadingSplashScreen';
 import MapOnListScreen from '../screens/MapOnListScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 
 // Create the stack and drawer navigators
 const Stack = createNativeStackNavigator();
@@ -82,6 +83,7 @@ const StackNavigator: React.FC = () => (
     <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     <Stack.Screen name="TermsAndCondition" component={TermsAndConditions} />
   <Stack.Screen name="MapOnList" component={MapOnListScreen} />
+  <Stack.Screen name="Notification" component={NotificationScreen} />
 
     
     <Stack.Screen name="BottomHome" component={BottomRoutes} />

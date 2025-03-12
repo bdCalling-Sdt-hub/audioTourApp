@@ -97,7 +97,7 @@ const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
         if(from === "forgetPassword") {
           navigation?.navigate("ChangePassword")
         }else{
-          navigation?.navigate('login');
+          navigation?.navigate('OnboardingScreen1');
         }
         
       }

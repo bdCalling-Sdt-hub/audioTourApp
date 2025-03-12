@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -11,25 +11,26 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
-import { fontSizes, iconSizes, spacing } from '../constants/dimensions';
-import { fontFamilies } from '../constants/fonts';
+import {fontSizes, iconSizes, spacing} from '../constants/dimensions';
+import {fontFamilies} from '../constants/fonts';
 import PlayerRepeatToggle from '../components/player/PlayerRepeatToggle';
 import PlayerShuffleToggle from '../components/player/PlayerShuffleToggle';
 import PlayerProgressBar from '../components/player/PlayerProgressBar';
-import { useSharedValue } from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 import {
   GoToForwardButton,
   GoToPreviousButton,
   PlayPauseButton,
 } from '../components/player/playerControls';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import useLikedSongs from '../store/LikeStore';
-import { isExist } from '../utils';
-import { Slider } from 'react-native-awesome-slider';
-import { SvgXml } from 'react-native-svg';
-import { backWordwithTime, StarWithRound } from '../assets/icons/icons';
+import {isExist} from '../utils';
+import {Slider} from 'react-native-awesome-slider';
+import {SvgXml} from 'react-native-svg';
+import {backWordwithTime, StarWithRound} from '../assets/icons/icons';
+import {usePostStoreFavoriteMutation} from '../redux/apiSlices/FavoriteSlice';
 
-const { MusicControlModule } = NativeModules;
+const {MusicControlModule} = NativeModules;
 
 // Define the MusicControlModule Type
 interface MusicControlModuleType {
@@ -39,7 +40,7 @@ interface MusicControlModuleType {
   pause: () => Promise<string>;
   stop: () => Promise<string>;
   toggleMute: (isMute: boolean) => Promise<string>; // Add this line
-// newly added
+  // newly added
   getCurrentPosition: () => Promise<number>;
   seekTo: (position: number) => Promise<void>;
 }
@@ -47,7 +48,7 @@ interface MusicControlModuleType {
 // Cast NativeModule to the defined type
 const MusicControl: MusicControlModuleType =
   MusicControlModule as MusicControlModuleType;
-console.log("player screen 50", MusicControlModule)
+console.log('player screen 50', MusicControlModule);
 // Define types for the route params
 interface RouteParams {
   route: {
@@ -65,26 +66,28 @@ interface Track {
   artwork: string;
 }
 
-const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
-  const { colors } = useTheme();
-  const { likedSongs, addToLiked } = useLikedSongs();
+const PlayerScreen: React.FC<RouteParams> = ({route}) => {
+  const {colors} = useTheme();
+  const {likedSongs, addToLiked} = useLikedSongs();
   const navigation = useNavigation();
   const [isMute, setIsMute] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
-  const { selectedTrack, trackList } = route.params || {};
-  console.log("playerScreen", selectedTrack?.audio_file)
+  const {selectedTrack, trackList} = route.params || {};
+  const [postStoreFavorite, {isLoading, isError}] =
+    usePostStoreFavoriteMutation();
+  console.log('playerScreen', selectedTrack?.id);
   const progress = useSharedValue(30);
   const min = useSharedValue(0);
   const max = useSharedValue(100);
   useEffect(() => {
     if (selectedTrack && trackList) {
       const selectedTrackIndex = trackList.findIndex(
-        (track) => track?.audio_file === selectedTrack?.audio_file
+        track => track?.url === selectedTrack?.url,
       );
       if (selectedTrackIndex !== -1) {
         setCurrentTrackIndex(selectedTrackIndex);
-        playMusic(selectedTrack?.audio_file);
+        playMusic(selectedTrack?.url);
       }
     }
     // // newly added
@@ -92,26 +95,45 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
   }, [selectedTrack, trackList]);
 
   if (!selectedTrack || !trackList || trackList.length === 0) {
-    console.log("++++++++95", selectedTrack)
+    console.log('++++++++95', selectedTrack);
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Text>No track selected or track list is empty</Text>
       </View>
     );
   }
 
   const playMusic = (trackUrl: string): void => {
-    console.log("playerscreen 102", trackUrl)
+    console.log('playerscreen 102', trackUrl);
     MusicControl.play(trackUrl)
       .then(() => {
-        console.log("Music started playing:", trackUrl);
+        console.log('Music started playing:', trackUrl);
         setIsPlaying(true);
       })
       .catch((error: any) => {
-        console.error("Error playing music:", error);
-        Alert.alert("Error", `Unable to play music: ${error}`);
+        console.error('Error playing music:', error);
+        Alert.alert('Error', `Unable to play music: ${error}`);
       });
   };
+
+  // const playMusic = (trackUrl: string): void => {
+  //   if (!trackUrl) {
+  //     console.error('Track URL is undefined or empty.');
+  //     return;
+  //   }
+
+  //   console.log('Attempting to play track URL:', trackUrl);
+
+  //   MusicControl.play(trackUrl)
+  //     .then(() => {
+  //       console.log("Music started playing:", trackUrl);
+  //       setIsPlaying(true);
+  //     })
+  //     .catch((error: any) => {
+  //       console.error("Error playing music:", error);
+  //       Alert.alert("Error", `Unable to play music: ${error}`);
+  //     });
+  // };
 
   const pauseMusic = (): void => {
     MusicControl.pause()
@@ -119,7 +141,7 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
         setIsPlaying(false);
       })
       .catch((error: any) =>
-        Alert.alert('Error', 'Unable to pause music: ' + error)
+        Alert.alert('Error', 'Unable to pause music: ' + error),
       );
   };
 
@@ -156,46 +178,58 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
     try {
       // Get the current playback position in seconds
       const currentPosition = await MusicControlModule.getCurrentPosition();
-  
+
       // Calculate new position, 10 seconds back, converted to milliseconds
-      const newPosition = Math.max((currentPosition * 1000) - 10000, 0);
-  
+      const newPosition = Math.max(currentPosition * 1000 - 10000, 0);
+
       // Seek to the new position
       await MusicControlModule.seekTo(newPosition);
     } catch (error) {
-      console.error("Error rewinding track:", error);
-      Alert.alert("Error", "Unable to rewind track by 10 seconds");
+      console.error('Error rewinding track:', error);
+      Alert.alert('Error', 'Unable to rewind track by 10 seconds');
     }
   };
-  
 
   const currentTrack = trackList[currentTrackIndex];
-
+  const handleSendLove =async (currentTrack) => {
+    console.log("currentTrack", currentTrack?.id)
+    const formData = new FormData()
+    formData.append('audio_id', currentTrack?.id)
+  const res = await postStoreFavorite(formData)
+  console.log("love sending res", res)
+  };
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={navigation.goBack}>
-          <AntDesign name={'arrowleft'} color={colors.iconPrimary} size={iconSizes.md} />
+          <AntDesign
+            name={'arrowleft'}
+            color={colors.iconPrimary}
+            size={iconSizes.md}
+          />
         </TouchableOpacity>
-        <Text style={[styles.headerText, { color: colors.textPrimary }]}>
+        <Text style={[styles.headerText, {color: colors.textPrimary}]}>
           Playing Now
         </Text>
       </View>
 
       <View style={styles.coverImgContainer}>
-        <Image source={{ uri: currentTrack?.artwork }} style={styles.coverImg} />
+        <Image source={{uri: currentTrack?.artwork}} style={styles.coverImg} />
       </View>
 
       <View style={styles.titleRowHeartContainer}>
         <View style={styles.titleContainer}>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
+          <Text style={[styles.title, {color: colors.textPrimary}]}>
             {currentTrack?.title}
           </Text>
-          <Text style={[styles.artist, { color: colors.textSecondary }]}>
+          <Text style={[styles.artist, {color: colors.textSecondary}]}>
             {currentTrack?.artist}
           </Text>
         </View>
-        <TouchableOpacity onPress={() => addToLiked(currentTrack)}>
+        <TouchableOpacity
+          onPress={() => {
+            handleSendLove(currentTrack), addToLiked(currentTrack);
+          }}>
           <AntDesign
             name={isExist(likedSongs, currentTrack) ? 'heart' : 'hearto'}
             color={colors.iconSecondary}
@@ -211,7 +245,6 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
             color={colors.iconSecondary}
             size={iconSizes.lg}
           />
-      
         </TouchableOpacity>
 
         {/* <View style={styles.repeatShuffleWrapper}>
@@ -222,30 +255,35 @@ const PlayerScreen: React.FC<RouteParams> = ({ route }) => {
 
       <PlayerProgressBar />
 
-    
       <View style={styles.playPauseContainer}>
         <TouchableOpacity onPress={hancleBackwithTime}>
-        <SvgXml xml={backWordwithTime} />
+          <SvgXml xml={backWordwithTime} />
         </TouchableOpacity>
-     
+
         {/* <GoToPreviousButton
           previousTrackUrl={currentTrackIndex > 0 ? trackList[currentTrackIndex - 1].url : null}
           onSkipToPrevious={handleSkipToPrevious}
           size={iconSizes.xl}
         /> */}
         <GoToPreviousButton
-          previousTrackUrl={currentTrackIndex > 0 ? trackList[currentTrackIndex - 1].url : null}
+          previousTrackUrl={
+            currentTrackIndex > 0 ? trackList[currentTrackIndex - 1].url : null
+          }
           onSkipToPrevious={handleSkipToPrevious}
           size={iconSizes.xl}
         />
         <PlayPauseButton
           size={iconSizes.xl}
           isPlaying={isPlaying}
-          onPlayPause={() => (isPlaying ? pauseMusic() : playMusic(currentTrack.url))}
+          onPlayPause={() =>
+            isPlaying ? pauseMusic() : playMusic(currentTrack.url)
+          }
         />
         <GoToForwardButton
           nextTrackUrl={
-            currentTrackIndex < trackList.length - 1 ? trackList[currentTrackIndex + 1].url : null
+            currentTrackIndex < trackList.length - 1
+              ? trackList[currentTrackIndex + 1].url
+              : null
           }
           onSkipToNext={handleSkipToNext}
           size={iconSizes.xl}
@@ -321,7 +359,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 // import {
 //   ActivityIndicator,
 //   Image,
@@ -331,7 +368,6 @@ const styles = StyleSheet.create({
 //   View,
 // } from 'react-native';
 // import React, {useEffect, useState} from 'react';
-
 
 // // iocnst
 // import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -466,7 +502,7 @@ const styles = StyleSheet.create({
 //     width: '100%',
 //   },
 //   headerText: {
-  
+
 //     textAlign: 'center',
 //     fontSize: fontSizes.lg,
 //     fontFamily: fontFamilies.medium,
@@ -486,12 +522,12 @@ const styles = StyleSheet.create({
 //   },
 //   title: {
 //     fontSize: fontSizes.xl,
-  
+
 //     fontFamily: fontFamilies.medium,
 //   },
 //   artist: {
 //     fontSize: fontSizes.md,
-    
+
 //   },
 
 //   titleRowHeartContainer: {

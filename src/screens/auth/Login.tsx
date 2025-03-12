@@ -17,7 +17,7 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SvgXml} from 'react-native-svg';
 import { useLoginUserMutation } from '../../redux/apiSlices/authSlice';
-import { setStorageToken } from '../../utils/utils';
+import { lStorage, setStorageToken } from '../../utils/utils';
 
 // Define the types for your navigation routes
 type RootStackParamList = {
@@ -61,7 +61,8 @@ const Login = () => {
     try {
       const res = await login(formData).unwrap(); 
       if(res?.access_token){
-        setStorageToken(res?.access_token);
+      lStorage.setString('token', res?.access_token);
+        // setStorageToken(res?.access_token);
         navigation?.replace('LoadingSplash');
       }
      
