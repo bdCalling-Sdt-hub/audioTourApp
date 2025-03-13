@@ -28,7 +28,8 @@ import {isExist} from '../utils';
 import {Slider} from 'react-native-awesome-slider';
 import {SvgXml} from 'react-native-svg';
 import {backWordwithTime, StarWithRound} from '../assets/icons/icons';
-import {usePostStoreFavoriteMutation} from '../redux/apiSlices/FavoriteSlice';
+import { usePostStoreFavoriteMutation } from '../redux/apiSlices/favoriteSlice';
+
 
 const {MusicControlModule} = NativeModules;
 
@@ -74,8 +75,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
   const {selectedTrack, trackList} = route.params || {};
-  const [postStoreFavorite, {isLoading, isError}] =
-    usePostStoreFavoriteMutation();
+  const [postStoreFavorite, {isLoading, isError}] =usePostStoreFavoriteMutation();
   console.log('playerScreen', selectedTrack?.id);
   const progress = useSharedValue(30);
   const min = useSharedValue(0);

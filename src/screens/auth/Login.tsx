@@ -51,10 +51,12 @@ const Login = () => {
       Alert.alert('Please fill in all fields');
       return;
     }
-  
+  const fcmtoken = lStorage.getString('fcmToken')
+      console.log("fcmToken", fcmtoken)
     const formData = new FormData();
     formData.append('email', email); 
     formData.append('password', password);
+    formData.append('device_token', fcmtoken)
   
     console.log('FormData before sending:', formData);
   

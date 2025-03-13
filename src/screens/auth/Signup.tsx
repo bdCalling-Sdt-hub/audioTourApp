@@ -53,6 +53,7 @@ const SignUp = () => {
         email: signupData.email,
         password: signupData.password,
         password_confirmation: signupData.confirmPassword,
+        device_token: fcmtoken
       };
 
       console.log('Sending request with data:', signupData);
