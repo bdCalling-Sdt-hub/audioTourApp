@@ -27,9 +27,10 @@ import useLikedSongs from '../store/LikeStore';
 import {isExist} from '../utils';
 import {Slider} from 'react-native-awesome-slider';
 import {SvgXml} from 'react-native-svg';
-import {backWordwithTime, StarWithRound} from '../assets/icons/icons';
-import { usePostStoreFavoriteMutation } from '../redux/apiSlices/favoriteSlice';
-
+import {backWordwithTime, IconBookmark, IconBookmarkBlack, StarWithRound} from '../assets/icons/icons';
+import {usePostStoreFavoriteMutation} from '../redux/apiSlices/favoriteSlice';
+import tw from '../lib/tailwind';
+import { usePostStorBookMarkMutation } from '../redux/apiSlices/bookMarkSlice';
 
 const {MusicControlModule} = NativeModules;
 
@@ -70,12 +71,15 @@ interface Track {
 const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   const {colors} = useTheme();
   const {likedSongs, addToLiked} = useLikedSongs();
+  const {bookMarkSongs, addToBookMark} = useLikedSongs();
   const navigation = useNavigation();
   const [isMute, setIsMute] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
   const {selectedTrack, trackList} = route.params || {};
-  const [postStoreFavorite, {isLoading, isError}] =usePostStoreFavoriteMutation();
+  const [postStoreFavorite, {isLoading, isError}] =
+    usePostStoreFavoriteMutation();
+    const [ postStorBookMark] = usePostStorBookMarkMutation()
   console.log('playerScreen', selectedTrack?.id);
   const progress = useSharedValue(30);
   const min = useSharedValue(0);
@@ -105,14 +109,14 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
 
   const playMusic = (trackUrl: string): void => {
     console.log('playerscreen 102', trackUrl);
-    MusicControl.play(trackUrl)
+    MusicControl?.play(trackUrl)
       .then(() => {
         console.log('Music started playing:', trackUrl);
         setIsPlaying(true);
       })
       .catch((error: any) => {
-        console.error('Error playing music:', error);
-        Alert.alert('Error', `Unable to play music: ${error}`);
+        console.log('Error playing music:', error);
+        console.log('Error', `Unable to play music: ${error}`);
       });
   };
 
@@ -131,7 +135,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   //     })
   //     .catch((error: any) => {
   //       console.error("Error playing music:", error);
-  //       Alert.alert("Error", `Unable to play music: ${error}`);
+  //       console.log("Error", `Unable to play music: ${error}`);
   //     });
   // };
 
@@ -141,7 +145,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
         setIsPlaying(false);
       })
       .catch((error: any) =>
-        Alert.alert('Error', 'Unable to pause music: ' + error),
+        console.log('Error', 'Unable to pause music: ' + error),
       );
   };
 
@@ -151,7 +155,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       setCurrentTrackIndex(currentTrackIndex + 1);
       playMusic(nextTrack.url);
     } else {
-      Alert.alert('Error', 'No next track available');
+      console.log('Error', 'No next track available');
     }
   };
 
@@ -170,7 +174,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       setCurrentTrackIndex(currentTrackIndex - 1);
       playMusic(previousTrack.url);
     } else {
-      Alert.alert('Error', 'No previous track available');
+      console.log('Error', 'No previous track available');
     }
   };
 
@@ -186,18 +190,35 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       await MusicControlModule.seekTo(newPosition);
     } catch (error) {
       console.error('Error rewinding track:', error);
-      Alert.alert('Error', 'Unable to rewind track by 10 seconds');
+      console.log('Error', 'Unable to rewind track by 10 seconds');
     }
   };
 
   const currentTrack = trackList[currentTrackIndex];
-  const handleSendLove =async (currentTrack) => {
-    console.log("currentTrack", currentTrack?.id)
-    const formData = new FormData()
-    formData.append('audio_id', currentTrack?.id)
-  const res = await postStoreFavorite(formData)
-  console.log("love sending res", res)
+  const handleSendLove = async currentTrack => {
+    console.log('currentTrack', currentTrack?.id);
+    const formData = new FormData();
+    formData.append('audio_id', currentTrack?.id);
+    const res = await postStoreFavorite(formData);
+    console.log('love sending res', res);
   };
+  const handleBookMark = async currentTrack => {
+    console.log('currentTrack', currentTrack?.id);
+    const formData = new FormData();
+    formData.append('audio_id', currentTrack?.id);
+    const res = await postStorBookMark(formData);
+    console.log('bookMark store res', res);
+  };
+
+  // if (isLoading) {
+  //   return (
+  //     <View style={tw`flex-1 justify-center items-center`}>
+  //       <ActivityIndicator size="large" color="#064145" />
+  //       <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+  //     </View>
+  //   );
+  // }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -218,6 +239,18 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       </View>
 
       <View style={styles.titleRowHeartContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            handleBookMark(currentTrack), addToLiked(currentTrack);
+          }}>
+            {isExist(likedSongs, currentTrack) ?   <SvgXml xml={IconBookmarkBlack}/> :   <SvgXml xml={IconBookmark}/>}
+          
+          {/* <AntDesign
+            name={isExist(likedSongs, currentTrack) ? 'heart' : 'hearto'}
+            color={colors.iconSecondary}
+            size={iconSizes.md}
+          /> */}
+        </TouchableOpacity>
         <View style={styles.titleContainer}>
           <Text style={[styles.title, {color: colors.textPrimary}]}>
             {currentTrack?.title}

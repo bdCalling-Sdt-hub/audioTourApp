@@ -62,6 +62,7 @@
 // const styles = StyleSheet.create({});
 
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StatusBar,
@@ -70,17 +71,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {SvgXml} from 'react-native-svg';
 import {crossIcon, DirectionIcon, locationIndicator, PlayButton} from '../assets/icons/icons';
 import tw from '../lib/tailwind';
 import {NavigProps} from '../interfaces/NaviProps';
 
 const StoryPreview = ({navigation, route}: NavigProps<string>) => {
+   const [isLoading, setIsLoading] = useState(false)
   // Extract selectedTrack and trackList from route.params
   const {selectedTrack, trackList} = route?.params || {};
   console.log("storyPreview1", selectedTrack)
   console.log("storyPreview2", trackList)
+
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color="#064145" />
+        <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={tw`flex-1`}>

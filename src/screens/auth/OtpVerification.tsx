@@ -15,6 +15,7 @@ import {
   useOtipVerifyMutation,
   useResentOtpMutation,
 } from '../../redux/apiSlices/authSlice';
+import {lStorage} from '../../utils/utils';
 
 const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -22,10 +23,10 @@ const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
   const [otipVerify, {isLoading, isError}] = useOtipVerifyMutation();
   const [resentOtp] = useResentOtpMutation();
 
-  const email = route?.params?.email
+  const email = route?.params?.email;
   const from = route?.params?.from;
-  console.log("from 27", from)
-  console.log("email", email)
+  console.log('from 27', from);
+  console.log('email', email);
 
   console.log('13', otp);
   useEffect(() => {
@@ -58,7 +59,7 @@ const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
       <TextInput
         cursorColor={'black'}
         key={index}
-        style={tw`h-16 w-16 border items-center justify-center border-textSecondary rounded-xl my-6`}
+        style={tw`h-16 w-16 border items-center justify-center border-textSecondary rounded-xl my-6 text-center`}
         keyboardType="numeric"
         maxLength={1}
         value={digit}
@@ -90,16 +91,16 @@ const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
       // console.log("formData", formData)
 
       const verifyRes = await otipVerify({otp: otpString});
-      console.log(verifyRes)
+      console.log(verifyRes?.data?.access_token);
+      lStorage.setString('token', verifyRes?.data?.access_token);
       console.log('+++verify res', verifyRes?.data?.success);
 
       if (verifyRes?.data?.success) {
-        if(from === "forgetPassword") {
-          navigation?.navigate("ChangePassword")
-        }else{
+        if (from === 'forgetPassword') {
+          navigation?.navigate('ChangePassword');
+        } else {
           navigation?.navigate('OnboardingScreen1');
         }
-        
       }
     } catch (error) {
       console.log(error);
@@ -110,13 +111,12 @@ const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
     console.log('click');
     try {
       const formData = new FormData();
-      formData.append('email', email)
+      formData.append('email', email);
       const res = await resentOtp(formData);
-      console.log("res", res)
+      console.log('res', res);
     } catch (err) {
       console.log(err);
     }
-    
   };
 
   return (

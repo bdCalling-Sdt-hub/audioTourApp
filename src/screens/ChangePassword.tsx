@@ -26,14 +26,17 @@ const ChangePassword = ({navigation}: NavigProps<string>) => {
   const [changePassword, {isLoading, isError}] = useChangePasswordMutation();
 
   const hanndleChangePassword = async () => {
-    console.log("click")
+    console.log('click');
     try {
       const formData = new FormData();
-      formData.append('password', newPassword)
-      formData.append('password_confirmation', confirmPassword)
-      console.log("formData", formData)
-      const changeRes = await changePassword(formData)
-      console.log("changeRes", changeRes)
+      formData.append('password', newPassword);
+      formData.append('password_confirmation', confirmPassword);
+      console.log('formData', formData);
+      const changeRes = await changePassword(formData);
+      console.log('changeRes', changeRes);
+      if (changeRes?.data?.success === true) {
+        navigation?.navigate('login');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -84,7 +87,7 @@ const ChangePassword = ({navigation}: NavigProps<string>) => {
           </View>
           <View style={tw`h-12 border border-primaryBase rounded-2xl `}>
             <InputText
-              onChangeText={(text) => setConfirmPassword(text)}
+              onChangeText={text => setConfirmPassword(text)}
               floatingPlaceholder
               floatingPlaceholderStyle={tw`text-textPrimary`}
               svgFirstIcon={IconLock}
@@ -106,7 +109,7 @@ const ChangePassword = ({navigation}: NavigProps<string>) => {
             //   handleChangePassword();
             //   navigation?.navigate('SuccessScreen');
             // }}
-            
+
             title="Update"
           />
         </View>

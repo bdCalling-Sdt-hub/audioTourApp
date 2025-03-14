@@ -133,7 +133,7 @@ const App = () => {
   messaging().onMessage(async remoteMessage => {
     console.log('Received foreground message:', remoteMessage);
     // Handle the notification in the foreground (e.g., show an alert, navigate, etc.)
-    Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+    // Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
   });
 
   // Handle background notifications and when the app is opened from terminated state

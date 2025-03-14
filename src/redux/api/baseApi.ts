@@ -75,7 +75,8 @@ export const api = createApi({
   tagTypes: [
     'user',
     'notification',
-    'map'
+    'map',
+    'Profile'
   ],
 });
 

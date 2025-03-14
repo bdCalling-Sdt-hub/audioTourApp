@@ -10,3 +10,6 @@ export const formatSecondsToMinute = (seconds) => {
 export const isExist = (songs, track) => {
     return songs.some(song =>song.url === track.url);
 }
+export const isBookMarkExist = (songs, track) => {
+    return songs.some(song =>song.url === track.url);
+}

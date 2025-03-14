@@ -64,7 +64,7 @@
 //   },
 // });
 
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 // import {colors} from '../../constants/color';
 
@@ -77,14 +77,25 @@ import FloatingPlayer from '../components/player/FloatingPlayer';
 import {songWithCategory} from '../data/SongsWithCategory';
 import {useTheme} from '@react-navigation/native';
 import Header from '../components/Header';
+import tw from '../lib/tailwind';
 
 const HomeScreen = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const {colors} = useTheme();
   const [selectedSong, setSelectedSong] = useState(null);
   console.log("Selected Song", selectedSong);
   // function to handle song selection
   const handleSongSelect = (song) => {
     setSelectedSong(song);
+  }
+
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color="#064145" />
+        <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+      </View>
+    );
   }
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>

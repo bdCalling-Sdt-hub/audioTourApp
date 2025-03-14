@@ -1,10 +1,11 @@
-import React from 'react';
-import { FlatList, StyleSheet, Text, View, Alert, NativeModules } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, Text, View, Alert, NativeModules, ActivityIndicator } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import SongCard from './SongCard';
 import { fontSizes, spacing } from '../../constants/dimensions';
 import { fontFamilies } from '../../constants/fonts';
 import { useTheme } from '@react-navigation/native';
+import tw from '../../lib/tailwind';
 
 // Define types for song and song category
 type Song = {
@@ -44,6 +45,7 @@ interface MusicControlModuleType {
 const MusicControl: MusicControlModuleType = MusicControlModule as MusicControlModuleType;
 
 const SongCardWithCategory: React.FC<SongCardWithCategoryProps> = ({ item }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -96,6 +98,15 @@ const SongCardWithCategory: React.FC<SongCardWithCategoryProps> = ({ item }) => 
       console.error('Error while playing track:', error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color="#064145" />
+        <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
