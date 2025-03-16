@@ -29,6 +29,9 @@ const NotificationScreen = ({navigation}) => {
               <Text>
                 {item?.created_at.slice(0, 10) || 'No date available'}
               </Text>
+              <Text>
+                {item?.created_at.slice(11, 19) || 'No date available'}
+              </Text>
             </View>
           )}
         />

@@ -106,7 +106,8 @@ const BottomRoutes = (props: Props) => {
       })}
     >
   
-  <Tab.Screen name="Home" component={Home} />
+  {/* <Tab.Screen name="Home" component={Home} /> */}
+  <Tab.Screen name="Home" component={HomeScreen} />
       {/* <Tab.Screen name="PlayerScreen" component={PlayerScreen} /> */}
       <Tab.Screen name="Player" component={PlayerScreen} />
       <Tab.Screen name="Map" component={MapScreen} />

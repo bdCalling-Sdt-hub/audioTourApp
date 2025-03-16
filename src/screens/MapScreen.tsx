@@ -275,6 +275,7 @@ const MapScreen = ({navigation}: NavigProps<string>) => {
 
       const spanishRes = await PostNearByAudio(formData);
       console.log('spanish API Response:', spanishRes?.data?.nearby_songs);
+      navigation?.navigate('MapOnList', {data: spanishRes?.data});
     } catch (error) {
       console.error('Error sending request:', error);
     }

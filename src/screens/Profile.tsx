@@ -7,13 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import tw from '../lib/tailwind';
 import InputText from '../components/inputs/InputText';
 import Button from '../components/buttons/Button';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {usePostUpdateProfileMutation} from '../redux/apiSlices/profileSlice';
+import {
+  useGetProfileQuery,
+  usePostUpdateProfileMutation,
+} from '../redux/apiSlices/profileSlice';
 
 type Props = {};
 interface ProfileData {
@@ -27,6 +30,13 @@ const Profile = (props: Props) => {
   console.log('profileImg', profileImage);
   const [postUpdateProfile, {isLoading, isError}] =
     usePostUpdateProfileMutation();
+  const {data} = useGetProfileQuery({});
+  console.log('profile data', data?.data);
+
+  useEffect(() => {
+    const img = data?.data?.avatar;
+    setProfileImage(img)
+  }, [data?.data?.avatar]);
 
   const [profileData, setProfileData] = useState<ProfileData>({
     fullname: '',
@@ -53,24 +63,24 @@ const Profile = (props: Props) => {
       formData.append('fullname', profileData?.fullname);
       formData.append('phone', profileData?.phone);
 
-      if (profileImage && profileImage.length > 0) {
-        const fileUri =profileImage.split('/').pop();; // Full URI of the image
-        console.log('fileUri', fileUri);
+      // if (profileImage && profileImage.length > 0) {
+      //   const fileUri =profileImage.split('/').pop();; // Full URI of the image
+      //   console.log('fileUri', fileUri);
 
-        formData.append('avatar', {
-          uri: profileImage, 
-          name: "image", 
-          type: 'jpg', 
-        });
-      }
-
-      // if (profileImage) {
-      //   formData.append('avatar', {0
+      //   formData.append('avatar', {
       //     uri: profileImage,
-      //     type: 'image/jpeg',
-      //     name: 'profile.jpg',
+      //     name: "image",
+      //     type: 'jpg',
       //   });
       // }
+
+      if (profileImage) {
+        formData.append('avatar', {
+          uri: profileImage,
+          type: 'image/jpeg',
+          name: 'profile.jpg',
+        });
+      }
       console.log('formdata', formData);
       const updateRes = await postUpdateProfile(formData);
       console.log('updateRes', updateRes);
@@ -91,8 +101,12 @@ const Profile = (props: Props) => {
           }
           style={tw`w-24 h-24 rounded-full`}
         />
+
+        <Text style={tw`text-primaryBase text-lg mt-2`}>
+        {data?.data?.name}
+        </Text>
         <Text style={tw`text-primaryBase text-xs mt-2`}>
-          Tap to change photo
+        {data?.data?.email}
         </Text>
       </TouchableOpacity>
       <View>

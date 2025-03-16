@@ -14,7 +14,16 @@ const profileSlice = api.injectEndpoints({
             }),
             invalidatesTags: ['Profile'],
           }),
+        getProfile: builder.query({
+            query: () => ({
+              url: `/profile`,
+              method: 'GET',
+            }),
+            providesTags: ['Profile'],
+          }),
     })
 })
 
-export const {usePostUpdateProfileMutation} = profileSlice;
+export const {usePostUpdateProfileMutation,
+  useGetProfileQuery
+} = profileSlice;

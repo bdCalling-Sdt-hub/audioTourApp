@@ -10,7 +10,7 @@ const notificatiopnSlice = api.injectEndpoints({
             providesTags: ['notification'],
           }),
           putMarkAllRead: builder.mutation<void, void>({
-            query: () => ({
+            query: (id) => ({
               url: '/notifications/mark-all-as-read',
               method: 'PUT',
               headers: {

@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xl,
   },
   coverImg: {
-    height: 260,
+    height: 200,
     width: 260,
     borderRadius: 10,
   },
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: fontSizes.xl,
+    fontSize: fontSizes.sm,
     fontFamily: fontFamilies.medium,
   },
   artist: {
