@@ -5,9 +5,12 @@ import {IconBack, leftArrow} from '../assets/icons/icons';
 import {SvgXml} from 'react-native-svg';
 import Button from '../components/buttons/Button';
 import {useNavigation} from '@react-navigation/native'; // Import useNavigation hook
+import { useGetTermsQuery } from '../redux/apiSlices/drawerSlices';
 
 const TermsAndConditions = () => {
   const navigation = useNavigation(); // Initialize navigation
+  const {data, isLoading, isError} = useGetTermsQuery({})
+  console.log("terms", data?.page?.content)
 
   // Define the handleGoBack function
   const handleGoBack = () => {
@@ -39,37 +42,10 @@ const TermsAndConditions = () => {
         </View>
 
         {/* Additional clauses */}
-        <View style={tw`gap-2 my-6`}>
-          <Text style={tw`text-textPrimary text-xl`}>Clause 2</Text>
-          <Text style={tw`text-textSecondary mt-1 leading-6`}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra
-            condimentum eget purus in. Consectetur eget id morbi amet amet, in.
-            Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean
-            leo pharetra in sit semper et. Amet quam placerat sem.
-          </Text>
-        </View>
-        <View style={tw`gap-2 my-6`}>
-          <Text style={tw`text-textPrimary text-xl`}>Clause 3</Text>
-          <Text style={tw`text-textSecondar mt-1 leading-6`}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra
-            condimentum eget purus in. Consectetur eget id morbi amet amet, in.
-            Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean
-            leo pharetra in sit semper et. Amet quam placerat sem.
-          </Text>
-        </View>
-
-        <View style={tw`gap-2 my-6`}>
-          <Text style={tw`text-textPrimary text-xl`}>Clause 4</Text>
-          <Text style={tw`text-textSecondary mt-1 leading-6`}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra
-            condimentum eget purus in. Consectetur eget id morbi amet amet, in.
-            Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean
-            leo pharetra in sit semper et. Amet quam placerat sem.
-          </Text>
-        </View>
+       <Text>{data?.page?.content}</Text>
       </ScrollView>
 
-      <Button title="Accept & Continue" textStyle={tw`text-white font-bold`} containerStyle={tw`bg-primaryBase border-0 mt-4`} />
+      {/* <Button title="Accept & Continue" textStyle={tw`text-white font-bold`} containerStyle={tw`bg-primaryBase border-0 mt-4`} /> */}
     </View>
   );
 };

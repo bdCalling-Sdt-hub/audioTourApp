@@ -51,7 +51,7 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) =
           )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('Aboutus')}
+          onPress={() => navigation.navigate('Aboutus')}
         />
         <DrawerItem
           label={'FAQ'}
@@ -60,7 +60,7 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) =
           )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('faq')}
+          onPress={() => navigation.navigate('faq')}
         />
         <DrawerItem
           label={'Privacy Policy'}
@@ -69,7 +69,7 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) =
           )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('PrivacyPolicy')}
+          onPress={() => navigation.navigate('PrivacyPolicy')}
         />
         <DrawerItem
           label={'Terms & conditions'}
@@ -78,14 +78,14 @@ const CustomDrawerContent: React.FC<CustomDrawerContentProps> = ({navigation}) =
           )}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('TermsAndCondition')}
+          onPress={() => navigation.navigate('TermsAndCondition')}
         />
         <DrawerItem
           label={'Change password'}
           icon={() => <SvgXml xml={IconEdit} width={25} height={25 }/>}
           labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
           style={styles.drawerItem}
-          onPress={() => props.navigation.navigate('ChangePassword')}
+          onPress={() => navigation.navigate('ChangePassword')}
         />
         <DrawerItem
           label={'Logout'}

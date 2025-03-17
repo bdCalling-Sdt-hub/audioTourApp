@@ -14,7 +14,17 @@ const favoriteSlice = api.injectEndpoints({
             }),
             invalidatesTags: ['map'],
           }),
+        getAllFavorite: builder.query({
+            query: () => ({
+              url: `/favorite`,
+              method: 'GET', 
+             
+            }),
+            providesTags: ['map'],
+          }),
     })
 })
 
-export const {usePostStoreFavoriteMutation} = favoriteSlice;
+export const {usePostStoreFavoriteMutation,
+  useGetAllFavoriteQuery,
+} = favoriteSlice;

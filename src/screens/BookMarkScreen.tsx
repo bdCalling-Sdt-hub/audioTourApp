@@ -1,4 +1,6 @@
 import {
+  ActivityIndicator,
+    FlatList,
     Image,
     ScrollView,
     StatusBar,
@@ -12,12 +14,31 @@ import {
   import {SvgXml} from 'react-native-svg';
   import {leftArrow, lessThanIcon} from '../assets/icons/icons';
   import {NavigProps} from '../interfaces/NaviProps';
+import { useGetAllFavoriteQuery } from '../redux/apiSlices/favoriteSlice';
   
   type Props = {};
   
   const BookMarkScreen = ({navigation}: NavigProps<string>) => {
+    const {data:bookMark, isLoading, isError} = useGetAllFavoriteQuery({})
+  console.log("all story", bookMark?.data?.data)
+  // console.log('data', data?.data);
+  const handleStoryPreview = item => {
+    console.log("20 +++++++++++++++", item)
+    navigation.navigate('SrotyPreview', {
+      selectedTrack: item,
+      trackList: bookMark?.data?.data,
+    });
+  };
+  if (isLoading) {
     return (
-      <ScrollView contentContainerStyle={tw` bg-white p-[4%]`}>
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color="#064145" />
+        <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+      </View>
+    );
+  }
+    return (
+      <ScrollView contentContainerStyle={tw` bg-white p-[4%] flex-1`}>
         <TouchableOpacity
           onPress={() => navigation?.goBack()}
           style={tw`flex-row items-center`}>
@@ -30,111 +51,29 @@ import {
               Here you can find your bookmark audio.
             </Text>
           
-  
-        <View style={tw`px-[4%] my-8`}>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center py-2`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('SrotyPreview')}
-            style={tw`flex-row gap-4 items-center`}>
-            <Image source={require('../assets/imgages/freeVideoimg1.png')} />
-            <Text> Atlanta, Georgia</Text>
-          </TouchableOpacity>
-        </View>
+            <View>
+        <FlatList
+          // horizontal
+          numColumns={2}
+          showsHorizontalScrollIndicator={false}
+          data={bookMark?.data?.data}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
+                onPress={() => handleStoryPreview(item)}
+                style={tw`mr-2 my-3 rounded-lg`}>
+                <Image
+                  style={tw`w-38 h-32 rounded-lg`}
+                  source={{uri: item?.artwork}}
+                />
+                <Text style={tw``}>{item?.title.slice(0, 12) + '...'}</Text>
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item, index) => (item.id ? item.id : `${index}`)} // Ensuring uniqueness
+        />
+      </View>
+ 
         <StatusBar translucent={false} />
       </ScrollView>
     );

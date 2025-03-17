@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StatusBar,
@@ -7,12 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {SvgXml} from 'react-native-svg';
 import {leftArrow} from '../assets/icons/icons';
 import tw from '../lib/tailwind';
 
 const MapOnListScreen = ({navigation, route}) => {
+  const [isLoading, setIsLoading] = useState(false)
   const data = route?.params?.data?.nearby_songs?.data || []; // Ensure valid data
   console.log('FlatList Data:', data);
 
@@ -23,6 +25,14 @@ const MapOnListScreen = ({navigation, route}) => {
       trackList: data,
     });
   };
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color="#064145" />
+        <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+      </View>
+    );
+  }
   return (
     <View style={tw`flex-1 px-[4%] my-2`}>
       {/* Navigation Back Button */}

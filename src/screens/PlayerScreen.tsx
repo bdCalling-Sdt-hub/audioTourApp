@@ -31,6 +31,7 @@ import {backWordwithTime, IconBookmark, IconBookmarkBlack, StarWithRound} from '
 import {usePostStoreFavoriteMutation} from '../redux/apiSlices/favoriteSlice';
 import tw from '../lib/tailwind';
 import { usePostStorBookMarkMutation } from '../redux/apiSlices/bookMarkSlice';
+import { usePostHistoyMutation } from '../redux/apiSlices/StorySlice';
 
 const {MusicControlModule} = NativeModules;
 
@@ -79,6 +80,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   const {selectedTrack, trackList} = route.params || {};
   const [postStoreFavorite, {isLoading, isError}] =
     usePostStoreFavoriteMutation();
+    const [postHistoy]= usePostHistoyMutation()
     const [ postStorBookMark] = usePostStorBookMarkMutation()
   console.log('playerScreen', selectedTrack?.id);
   const progress = useSharedValue(30);
@@ -149,11 +151,19 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       );
   };
 
-  const handleSkipToNext = (): void => {
+  const handleSkipToNext =async (): void => {
     if (currentTrackIndex < trackList.length - 1) {
       const nextTrack = trackList[currentTrackIndex + 1];
       setCurrentTrackIndex(currentTrackIndex + 1);
       playMusic(nextTrack.url);
+      try {
+        const formData = new FormData();
+        formData.append("audio_id", selectedTrack?.id)
+        const res = await postHistoy(formData);
+        console.log("res", res)
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       console.log('Error', 'No next track available');
     }
@@ -168,11 +178,19 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
     }
   };
 
-  const handleSkipToPrevious = (): void => {
+  const handleSkipToPrevious =async (): void => {
     if (currentTrackIndex > 0) {
       const previousTrack = trackList[currentTrackIndex - 1];
       setCurrentTrackIndex(currentTrackIndex - 1);
       playMusic(previousTrack.url);
+      try {
+        const formData = new FormData();
+        formData.append("audio_id", selectedTrack?.id)
+        const res = await postHistoy(formData);
+        console.log("res", res)
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       console.log('Error', 'No previous track available');
     }

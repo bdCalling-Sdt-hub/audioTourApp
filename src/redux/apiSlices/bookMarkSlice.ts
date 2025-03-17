@@ -14,7 +14,14 @@ const bookMarkSlice = api.injectEndpoints({
             }),
             invalidatesTags: ['map'],
           }),
+        getAllBookMark: builder.query({
+            query: () => ({
+              url: `/bookmark`,
+              method: 'GET', 
+            }),
+            
+          }),
     })
 })
 
-export const {usePostStorBookMarkMutation} = bookMarkSlice;
+export const {usePostStorBookMarkMutation, useGetAllBookMarkQuery} = bookMarkSlice;

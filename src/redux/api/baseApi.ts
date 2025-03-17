@@ -76,7 +76,8 @@ export const api = createApi({
     'user',
     'notification',
     'map',
-    'Profile'
+    'Profile',
+    'History'
   ],
 });
 

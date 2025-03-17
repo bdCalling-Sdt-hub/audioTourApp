@@ -35,97 +35,108 @@ import SuccessScreen from '../screens/SuccessScreen';
 import FaqScreen from '../screens/FaqScreen';
 import Aboutus from '../screens/Aboutus';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
-import useTrackPlayer, { useSetupTrackPlayer } from '../hooks/useSetupTrackPlayer.';
-import { AppState, useColorScheme } from 'react-native';
-import { useThemeStore } from '../store/ThemeStore';
+import useTrackPlayer, {
+  useSetupTrackPlayer,
+} from '../hooks/useSetupTrackPlayer.';
+import {AppState, useColorScheme} from 'react-native';
+import {useThemeStore} from '../store/ThemeStore';
 import useLikedSongs from '../store/LikeStore';
-import { setupPlayer } from 'react-native-track-player/lib/src/trackPlayer';
-import { Provider } from 'react-redux';
+import {setupPlayer} from 'react-native-track-player/lib/src/trackPlayer';
+import {Provider} from 'react-redux';
 import store from '../redux/store';
 import LoadingSplash from '../screens/LoadingSplashScreen';
 import MapOnListScreen from '../screens/MapOnListScreen';
 import NotificationScreen from '../screens/NotificationScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
+import { StripeProvider } from '@stripe/stripe-react-native';
+
+
 
 // Create the stack and drawer navigators
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const StackNavigator: React.FC = () => (
-  <Stack.Navigator
-  
-    initialRouteName="LoadingSplash"
-    screenOptions={{headerShown: false}}>
-    
-    <Stack.Screen name="LoadingSplash" component={LoadingSplash} />
-    <Stack.Screen name="OnboardingScreen1" component={OnboardingScreen1} />
-    <Stack.Screen name="OnboardingScreen2" component={OnboardingScreen2} />
-    <Stack.Screen name="AllowNotification" component={AllowNotification} />
-    <Stack.Screen name="BackgroundPermission" component={BackgroundPermission} />
-    <Stack.Screen name="BackgroundLocation" component={BackgroundLocation} />
-    
-    <Stack.Screen name="login" component={Login} />
-    <Stack.Screen name="signUp" component={SignUp} />
-   
-    <Stack.Screen name="forgetPassword" component={ForgetPassword} />
-    <Stack.Screen name="otpVerification" component={OtpVerification} />
-    <Stack.Screen name="newPassword" component={NewPassword} />
-    <Stack.Screen name="termsCondition" component={TermsAndConditions} />
-    <Stack.Screen name="faq" component={Faq} />
-    {/* <Stack.Screen name="PlayerScreen" component={PlayerScreen} /> */}
-    <Stack.Screen name="EnjoyThreeFreeAudio" component={EnjoyThreeAudiosFree} />
-    <Stack.Screen name="SrotyPreview" component={StoryPreview} />
-    <Stack.Screen name="MyStories" component={MyStories} />
-    <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
-    <Stack.Screen name="BookMarkScreen" component={BookMarkScreen} />
-    <Stack.Screen name="ChangePassword" component={ChangePassword} />
-    <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
-    <Stack.Screen name="Aboutus" component={Aboutus} />
-    <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-    <Stack.Screen name="TermsAndCondition" component={TermsAndConditions} />
-  <Stack.Screen name="MapOnList" component={MapOnListScreen} />
-  <Stack.Screen name="Notification" component={NotificationScreen} />
+ 
+     
+    <Stack.Navigator
+      initialRouteName="LoadingSplash"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="LoadingSplash" component={LoadingSplash} />
+      <Stack.Screen name="OnboardingScreen1" component={OnboardingScreen1} />
+      <Stack.Screen name="OnboardingScreen2" component={OnboardingScreen2} />
+      <Stack.Screen name="AllowNotification" component={AllowNotification} />
+      <Stack.Screen
+        name="BackgroundPermission"
+        component={BackgroundPermission}
+      />
+      <Stack.Screen name="BackgroundLocation" component={BackgroundLocation} />
 
-    
-    <Stack.Screen name="BottomHome" component={BottomRoutes} />
-  </Stack.Navigator>
+      <Stack.Screen name="login" component={Login} />
+      <Stack.Screen name="signUp" component={SignUp} />
+
+      <Stack.Screen name="forgetPassword" component={ForgetPassword} />
+      <Stack.Screen name="otpVerification" component={OtpVerification} />
+      <Stack.Screen name="newPassword" component={NewPassword} />
+      <Stack.Screen name="termsCondition" component={TermsAndConditions} />
+      <Stack.Screen name="faq" component={Faq} />
+      {/* <Stack.Screen name="PlayerScreen" component={PlayerScreen} /> */}
+      <Stack.Screen
+        name="EnjoyThreeFreeAudio"
+        component={EnjoyThreeAudiosFree}
+      />
+      <Stack.Screen name="SrotyPreview" component={StoryPreview} />
+      <Stack.Screen name="MyStories" component={MyStories} />
+      <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+      <Stack.Screen name="BookMarkScreen" component={BookMarkScreen} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
+      <Stack.Screen name="Aboutus" component={Aboutus} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="TermsAndCondition" component={TermsAndConditions} />
+      <Stack.Screen name="MapOnList" component={MapOnListScreen} />
+      <Stack.Screen name="Notification" component={NotificationScreen} />
+      <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+
+      <Stack.Screen name="BottomHome" component={BottomRoutes} />
+    </Stack.Navigator>
+
 );
 
 const AppRoutes: React.FC = () => {
   useDeviceContext(tw);
- 
-//   const onLoad = () => {
-//     console.log('track player setup..');
-//   }
-//  useSetupTrackPlayer({onLoad});
 
- 
+  //   const onLoad = () => {
+  //     console.log('track player setup..');
+  //   }
+  //  useSetupTrackPlayer({onLoad});
+
   const {isDarkMode, toggleTheme} = useThemeStore();
-  const scheme = useColorScheme()
+  const scheme = useColorScheme();
   const {loadLikedSongs} = useLikedSongs();
   useEffect(() => {
     loadLikedSongs();
-    scheme === "light" ? toggleTheme(false) : toggleTheme(true)
+    scheme === 'light' ? toggleTheme(false) : toggleTheme(true);
   }, [scheme]);
-  
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
         <Provider store={store}>
-        <SafeAreaView style={tw`flex-1`}>
-          <NavigationContainer>
-            <Drawer.Navigator
-              screenOptions={{
-                headerShown: false,
-                drawerType: 'slide',
-                // swipeEdgeWidth: 0,
-              }}
-              drawerContent={props => <CustomDrawerContent {...props} />}>
-              <Drawer.Screen name="DRAWER_HOME" component={StackNavigator} />
-            </Drawer.Navigator>
-          </NavigationContainer>
-        </SafeAreaView>
+          <SafeAreaView style={tw`flex-1`}>
+            <NavigationContainer>
+              <Drawer.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  drawerType: 'slide',
+                  // swipeEdgeWidth: 0,
+                }}
+                drawerContent={props => <CustomDrawerContent {...props} />}>
+                <Drawer.Screen name="DRAWER_HOME" component={StackNavigator} />
+              </Drawer.Navigator>
+            </NavigationContainer>
+          </SafeAreaView>
         </Provider>
-       
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

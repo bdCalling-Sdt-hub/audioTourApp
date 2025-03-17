@@ -42,11 +42,11 @@
 //       </View>
 //       <View style={tw`px-[4%]`}>
 //         <Text>
-//         Lorem ipsum dolor sit amet consectetur. Diam malesuada viverra purus bibendum vestibulum. Elementum a id gravida quis nec viverra. 
+//         Lorem ipsum dolor sit amet consectetur. Diam malesuada viverra purus bibendum vestibulum. Elementum a id gravida quis nec viverra.
 //         </Text>
 //       </View>
 //       <View style={tw`m-[4%] border h-48 rounded-lg`}>
-  
+
 //       </View>
 //       <View style={tw`px-[4%] flex-row gap-2`}>
 //       <SvgXml xml={DirectionIcon} width={20} height={20}/>
@@ -71,18 +71,43 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {SvgXml} from 'react-native-svg';
-import {crossIcon, DirectionIcon, locationIndicator, PlayButton} from '../assets/icons/icons';
+import {
+  crossIcon,
+  DirectionIcon,
+  locationIndicator,
+  PlayButton,
+} from '../assets/icons/icons';
 import tw from '../lib/tailwind';
 import {NavigProps} from '../interfaces/NaviProps';
+import {usePostHistoyMutation} from '../redux/apiSlices/StorySlice';
 
 const StoryPreview = ({navigation, route}: NavigProps<string>) => {
-   const [isLoading, setIsLoading] = useState(false)
   // Extract selectedTrack and trackList from route.params
   const {selectedTrack, trackList} = route?.params || {};
-  console.log("storyPreview1", selectedTrack)
-  console.log("storyPreview2", trackList)
+  const [postHistoy, {isLoading, isError}] = usePostHistoyMutation();
+  console.log('storyPreview1', selectedTrack);
+  console.log('storyPreview2', trackList);
+
+  const handlePlayer = async () => {
+    navigation?.navigate('Player', {selectedTrack, trackList});
+    try {
+      const formData = new FormData();
+      if(selectedTrack?.is_subscription_required){
+        navigation?.navigate("Subscription")
+      }else{
+        formData.append("audio_id", selectedTrack?.id)
+        const res = await postHistoy(formData);
+        console.log("res", res)
+      }
+      
+     
+    } catch (error) {
+      console.log(error);
+    }
+   
+  };
 
   if (isLoading) {
     return (
@@ -112,11 +137,12 @@ const StoryPreview = ({navigation, route}: NavigProps<string>) => {
               : require('../assets/imgages/StoryOnClick.png') // Fallback image
           }
         />
-        <View style={tw`flex-row justify-between py-4 mx-[6%] border-b-gray-300 border-b-2`}>
+        <View
+          style={tw`flex-row justify-between py-4 mx-[6%] border-b-gray-300 border-b-2`}>
           <Text style={tw`text-textPrimary text-xl font-bold`}>
             {selectedTrack?.language || 'Unknown Location'}
           </Text>
-          <TouchableOpacity onPress={() => navigation?.navigate('Player', {selectedTrack, trackList})}>
+          <TouchableOpacity onPress={handlePlayer}>
             <SvgXml xml={PlayButton} width={25} height={25} />
           </TouchableOpacity>
         </View>

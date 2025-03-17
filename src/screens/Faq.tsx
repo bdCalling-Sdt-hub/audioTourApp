@@ -5,9 +5,12 @@ import {SvgXml} from 'react-native-svg';
 import {IconBack, leftArrow, lessThanIcon} from '../assets/icons/icons';
 import Expend from '../components/expend/Expend';
 import {useNavigation} from '@react-navigation/native'; // Import useNavigation
+import { useGetFaqQuery } from '../redux/apiSlices/drawerSlices';
 
 const Faq = () => {
   const navigation = useNavigation(); // Initialize navigation
+  const {data, isLoading, isError} = useGetFaqQuery({})
+  console.log("faq", data?.page?.content)
 
   // Define handleBack function
   const handleBack = () => {
@@ -30,13 +33,8 @@ const Faq = () => {
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tw`pb-6`}>
-        <Expend />
-        <Expend />
-        <Expend />
-        <Expend />
-        <Expend />
-        <Expend />
+        contentContainerStyle={tw`pb-6 px-[4%]`}>
+       <Text>{data?.page?.content}</Text>
       </ScrollView>
     </View>
   );

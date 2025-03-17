@@ -79,6 +79,17 @@ const authSlice = api.injectEndpoints({
         }),
         invalidatesTags: ['user'],
       }),
+      postSocialLogin: builder.mutation({
+        query:(data) => ({
+          url: `/auth/social-login`,
+          method: "POST",
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            // 'Content-Type': 'application/json',
+          },
+          body: data,
+        })
+      })
       
     }),
   });
@@ -88,5 +99,6 @@ export const {useLoginUserMutation,
     useRegisterUserMutation,
     useOtipVerifyMutation,
     useResentOtpMutation,
-    useChangePasswordMutation
+    useChangePasswordMutation,
+    usePostSocialLoginMutation
 } = authSlice;
