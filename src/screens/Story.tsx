@@ -25,10 +25,10 @@ const Story = ({navigation}: NavigProps<string>) => {
   const {data:favorite} = useGetAllFavoriteQuery({})
   const {data:bookMark} = useGetAllFavoriteQuery({})
   console.log("all story", bookMark?.data?.data)
-  // console.log('data', data?.data);
+  console.log('data', data?.data);
   const handleStoryPreview = item => {
-    console.log("20 +++++++++++++++", item)
-    navigation.navigate('SrotyPreview', {
+    // console.log("20 +++++++++++++++", item)
+    navigation?.navigate('SrotyPreview', {
       selectedTrack: item,
       trackList: data?.data,
     });
@@ -96,17 +96,24 @@ const Story = ({navigation}: NavigProps<string>) => {
           </TouchableOpacity>
           <Text style={tw`text-textPrimary font-bold`}>Favorite</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation?.navigate('BookMarkScreen')}
           style={tw`flex-row items-center gap-4`}>
           <View style={tw`border border-gray-300 p-3 rounded-lg`}>
             <SvgXml xml={BookmarkIcon} width={30} height={30} />
-          </View>
-          <TouchableOpacity
-            onPress={() => navigation?.navigate('BookMarkScreen')}>
-            <Text style={tw`text-textPrimary font-bold`}>Bookmarks</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
+          </View> */}
+          {/* <TouchableOpacity
+            onPress={() => navigation?.navigate('BookMarkScreen')}
+            style={tw`flex-row items-center gap-4`}
+            >
+           
+            
+          <View style={tw`border border-gray-300 p-3 rounded-lg`}>
+            <SvgXml xml={BookmarkIcon} width={30} height={30} />
+          </View> 
+          <Text style={tw`text-textPrimary font-bold`}>Bookmarks</Text>
+          </TouchableOpacity> */}
+        {/* </TouchableOpacity> */}
       </View>
       <StatusBar translucent={false} />
     </ScrollView>

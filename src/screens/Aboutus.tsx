@@ -26,7 +26,7 @@ const Aboutus = ({navigation}: NavigProps<string>) => {
           onPress={() => navigation?.goBack()}
           style={tw`py-6 px-4 flex-row gap-2 items-center`}>
           <SvgXml xml={leftArrow} width={25} height={25} />
-          <Text style={tw`text-textPrimary text-2xl`}>FAQ</Text>
+          <Text style={tw`text-textPrimary text-2xl`}>About us</Text>
         </TouchableOpacity>
       </View>
       <View>

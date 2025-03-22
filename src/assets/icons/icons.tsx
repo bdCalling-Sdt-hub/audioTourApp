@@ -104,7 +104,7 @@ export const IconGoogle = `<svg width="21" height="20" viewBox="0 0 21 20" fill=
 </svg>
 `;
 
-export const IconFacebook = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const IconFacebook = `<svg width="20" height="20" viewBox="0 0 20 20" fill="black" xmlns="http://www.w3.org/2000/svg">
 <path d="M10 20C15.5229 20 20 15.5228 20 10C20 4.47715 15.5229 0 10 0C4.47718 0 3.05176e-05 4.47715 3.05176e-05 10C3.05176e-05 15.5228 4.47718 20 10 20Z" fill="#3C5A9A"/>
 </svg>
 `;
@@ -332,7 +332,7 @@ export const IconBookmark = `
 
 `;
 export const IconBookmarkBlack = `
-<svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="20" height="24" viewBox="0 0 20 24" fill="black" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.666687 24V2.66667C0.666687 1.93333 0.92802 1.30578 1.45069 0.784C1.97335 0.262222 2.60091 0.000888889 3.33335 0H16.6667C17.4 0 18.028 0.261333 18.5507 0.784C19.0734 1.30667 19.3342 1.93422 19.3334 2.66667V24L10 20L0.666687 24ZM3.33335 19.9333L10 17.0667L16.6667 19.9333V2.66667H3.33335V19.9333Z" fill="black"/>
 </svg>
 `;

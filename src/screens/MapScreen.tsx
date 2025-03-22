@@ -21,6 +21,10 @@ import {
   usePostNearByAudioMutation,
 } from '../redux/apiSlices/mapSlice';
 
+import {useFocusEffect} from '@react-navigation/native';
+import { useGetListenCountQuery } from '../redux/apiSlices/subsCriptionSlice';
+
+
 interface Location {
   latitude: number;
   longitude: number;
@@ -34,12 +38,28 @@ const MapScreen = ({navigation}: NavigProps<string>) => {
   const [showPopup, setShowPopup] = useState(false);
   const [PostNearByAudio, {isLoading, isError}] = usePostNearByAudioMutation();
   const [findNearbyAudio] = useFindNearbyAudioMutation();
+const {data} = useGetListenCountQuery({})
+console.log("42", data)
+  // console.log('current location', currentLocation);
 
-  console.log('current location', currentLocation);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const isMessage = data?.message;
+  //     console.log('isMessage:', isMessage);
+
+  //     // Optionally, refetch if needed
+  //     // refetch();
+
+  //     // You can return a cleanup function if needed
+  //     return () => {
+  //       console.log('Cleanup logic if needed');
+  //     };
+  //   }, [data?.message]), // dependencies for when this effect should rerun
+  // );
 
   useEffect(() => {
     if (currentLocation) {
-      console.log("currentLocation +++++++++++++++", currentLocation)
+      // console.log("currentLocation +++++++++++++++", currentLocation)
       try {
         // Ensure lat/lng are numbers with decimal precision
         const latitude = Number(
@@ -57,16 +77,16 @@ const MapScreen = ({navigation}: NavigProps<string>) => {
         formData.append('lat', latitude);
         formData.append('lng', longitude);
 
-        console.log('Final FormData:', {
-          lat: latitude,
-          lng: longitude,
-        });
+        // console.log('Final FormData:', {
+        //   lat: latitude,
+        //   lng: longitude,
+        // });
 
         // Trigger the mutation API request with formData
         const englishRes = findNearbyAudio(formData);
-        console.log('formdata', formData);
+        // console.log('formdata', formData);
         // Logging the response
-        console.log('auto API Response:', englishRes);
+        // console.log('auto API Response:', englishRes);
 
         // Handle navigation or response data
         if (englishRes?.data) {
@@ -346,11 +366,11 @@ const MapScreen = ({navigation}: NavigProps<string>) => {
           <Text style={tw`text-textPrimary`}>Atlanta, Georgia</Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation?.navigate('EnjoyThreeFreeAudio')}
+          onPress={() => setShowPopup(true)}
           activeOpacity={0.7}
           style={tw`flex-row bg-[#00216B] gap-4 py-3 px-[6%]`}>
           <Text style={tw`text-white flex mx-auto text-center`}>
-            Enjoy 3 audios free
+            {data?.message || "Listen 3 free audio"}
           </Text>
         </TouchableOpacity>
       </View>

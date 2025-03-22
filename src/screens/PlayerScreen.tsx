@@ -22,16 +22,26 @@ import {
   GoToPreviousButton,
   PlayPauseButton,
 } from '../components/player/playerControls';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import useLikedSongs from '../store/LikeStore';
 import {isExist} from '../utils';
 import {Slider} from 'react-native-awesome-slider';
 import {SvgXml} from 'react-native-svg';
-import {backWordwithTime, IconBookmark, IconBookmarkBlack, StarWithRound} from '../assets/icons/icons';
+import {
+  backWordwithTime,
+  IconBookmark,
+  IconBookmarkBlack,
+  StarWithRound,
+} from '../assets/icons/icons';
 import {usePostStoreFavoriteMutation} from '../redux/apiSlices/favoriteSlice';
 import tw from '../lib/tailwind';
-import { usePostStorBookMarkMutation } from '../redux/apiSlices/bookMarkSlice';
-import { usePostHistoyMutation } from '../redux/apiSlices/StorySlice';
+import {usePostStorBookMarkMutation} from '../redux/apiSlices/bookMarkSlice';
+import {usePostHistoyMutation} from '../redux/apiSlices/StorySlice';
+import {useGetCheckIsSubscribedQuery} from '../redux/apiSlices/subsCriptionSlice';
 
 const {MusicControlModule} = NativeModules;
 
@@ -76,50 +86,69 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   const navigation = useNavigation();
   const [isMute, setIsMute] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isCheck, setIsCheck] = useState(false)
+  // const [currentTrackId, setCurrentTrackId] = useState();
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
-  const {selectedTrack, trackList} = route.params || {};
+  console.log('trackIndex', currentTrackIndex);
+  const {selectedTrack, trackList} = route?.params || {};
   const [postStoreFavorite, {isLoading, isError}] =
     usePostStoreFavoriteMutation();
-    const [postHistoy]= usePostHistoyMutation()
-    const [ postStorBookMark] = usePostStorBookMarkMutation()
-  console.log('playerScreen', selectedTrack?.id);
+  const [postHistoy] = usePostHistoyMutation();
+  const [postStorBookMark] = usePostStorBookMarkMutation();
+  const {data, refetch} = useGetCheckIsSubscribedQuery({});
+  console.log('is check', data?.is_subscription_required);
+  // console.log('playerScreen', selectedTrack?.id);
   const progress = useSharedValue(30);
   const min = useSharedValue(0);
   const max = useSharedValue(100);
+
+  
+ 
   useEffect(() => {
     if (selectedTrack && trackList) {
       const selectedTrackIndex = trackList.findIndex(
-        track => track?.url === selectedTrack?.url,
+        (track) => track.url === selectedTrack.url
       );
       if (selectedTrackIndex !== -1) {
         setCurrentTrackIndex(selectedTrackIndex);
-        playMusic(selectedTrack?.url);
+        playMusic(selectedTrack.url);
       }
     }
-    // // newly added
-    // return stopMusic;
   }, [selectedTrack, trackList]);
 
   if (!selectedTrack || !trackList || trackList.length === 0) {
-    console.log('++++++++95', selectedTrack);
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>No track selected or track list is empty</Text>
       </View>
     );
   }
 
-  const playMusic = (trackUrl: string): void => {
+  const playMusic = async (trackUrl: string): void => {
     console.log('playerscreen 102', trackUrl);
-    MusicControl?.play(trackUrl)
-      .then(() => {
-        console.log('Music started playing:', trackUrl);
-        setIsPlaying(true);
-      })
-      .catch((error: any) => {
-        console.log('Error playing music:', error);
-        console.log('Error', `Unable to play music: ${error}`);
-      });
+     const currentTrackId = trackList[currentTrackIndex]?.id;
+
+    try {
+      const formData = new FormData();
+      if (selectedTrack?.is_subscription_required) {
+        navigation?.navigate('Subscription');
+      } else {
+      formData.append('audio_id', currentTrackId);
+      MusicControl?.play(trackUrl)
+        .then(() => {
+          console.log('Music started playing:', trackUrl);
+          setIsPlaying(true);
+        })
+        .catch((error: any) => {
+          console.log('Error playing music:', error);
+          console.log('Error', `Unable to play music: ${error}`);
+        });
+      const res = await postHistoy(formData);
+      console.log('res', res);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const playMusic = (trackUrl: string): void => {
@@ -151,21 +180,26 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       );
   };
 
-  const handleSkipToNext =async (): void => {
+  const handleSkipToNext = async (): void => {
+    if (isCheck?.data?.is_subscription_required === true) {
+      navigation?.navigate('Subscription');
+    } else {
     if (currentTrackIndex < trackList.length - 1) {
       const nextTrack = trackList[currentTrackIndex + 1];
       setCurrentTrackIndex(currentTrackIndex + 1);
       playMusic(nextTrack.url);
       try {
         const formData = new FormData();
-        formData.append("audio_id", selectedTrack?.id)
+        formData.append('audio_id', currentTrackId);
         const res = await postHistoy(formData);
-        console.log("res", res)
+        console.log('res nesxt', res);
+        setIsCheck(res)
       } catch (error) {
         console.log(error);
       }
     } else {
       console.log('Error', 'No next track available');
+    }
     }
   };
 
@@ -178,16 +212,16 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
     }
   };
 
-  const handleSkipToPrevious =async (): void => {
+  const handleSkipToPrevious = async (): void => {
     if (currentTrackIndex > 0) {
       const previousTrack = trackList[currentTrackIndex - 1];
       setCurrentTrackIndex(currentTrackIndex - 1);
       playMusic(previousTrack.url);
       try {
         const formData = new FormData();
-        formData.append("audio_id", selectedTrack?.id)
+        formData.append('audio_id', currentTrackId);
         const res = await postHistoy(formData);
-        console.log("res", res)
+        console.log('res', res);
       } catch (error) {
         console.log(error);
       }
@@ -237,8 +271,14 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   //   );
   // }
 
+  // useFocusEffect(() => {
+  //   const isCheck = data?.is_subscription_required;
+  //   console.log('ischeck+++', isCheck);
+  //    refetch();
+  // });
+  // const currentTrack = trackList[currentTrackIndex];
   return (
-    <View style={styles.container}>
+  <View style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={navigation.goBack}>
           <AntDesign
@@ -257,18 +297,22 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       </View>
 
       <View style={styles.titleRowHeartContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             handleBookMark(currentTrack), addToLiked(currentTrack);
           }}>
-            {isExist(likedSongs, currentTrack) ?   <SvgXml xml={IconBookmarkBlack}/> :   <SvgXml xml={IconBookmark}/>}
-          
-          {/* <AntDesign
+          {isExist(likedSongs, currentTrack) ? (
+            <SvgXml xml={IconBookmarkBlack} />
+          ) : (
+            <SvgXml xml={IconBookmark} />
+          )}
+
+          <AntDesign
             name={isExist(likedSongs, currentTrack) ? 'heart' : 'hearto'}
             color={colors.iconSecondary}
             size={iconSizes.md}
-          /> */}
-        </TouchableOpacity>
+          />
+        </TouchableOpacity> */}
         <View style={styles.titleContainer}>
           <Text style={[styles.title, {color: colors.textPrimary}]}>
             {currentTrack?.title}
@@ -331,6 +375,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
           }
         />
         <GoToForwardButton
+        
           nextTrackUrl={
             currentTrackIndex < trackList.length - 1
               ? trackList[currentTrackIndex + 1].url

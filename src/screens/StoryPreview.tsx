@@ -99,10 +99,8 @@ const StoryPreview = ({navigation, route}: NavigProps<string>) => {
       }else{
         formData.append("audio_id", selectedTrack?.id)
         const res = await postHistoy(formData);
-        console.log("res", res)
+        console.log("res  post history", res)
       }
-      
-     
     } catch (error) {
       console.log(error);
     }

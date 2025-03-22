@@ -72,6 +72,7 @@ const Login = () => {
   
     try {
       const res = await login(formData).unwrap(); 
+      console.log("login res", res)
       if(res?.access_token){
       lStorage.setString('token', res?.access_token);
         // setStorageToken(res?.access_token);
@@ -105,7 +106,7 @@ const Login = () => {
             {
               uri: resizedImage.uri,
               name: `image_${Date.now()}.jpeg`, // Use unique names
-              type: 'image/jpeg',
+              type: 'jpeg',
             },
           ]);
 
@@ -126,18 +127,13 @@ const Login = () => {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
       console.log('125', response?.data?.user);
-      // if(response?.data?.idToken){
-      //   const fcmToken =await AsyncStorage.setItem('token', response?.data?.idToken);
-      //   console.log("===", fcmToken)
-
-      // }
+      
       if (response?.data?.user) {
         const {name, email, id: google_id, photo} = response?.data?.user;
-        // await navigation?.navigate('Drawer');
         // Set the Google user data for further processing
         setGoogleUser({name, email, google_id, photo});
         console.log('Google Sign-In Successful:', photo, name, email, google_id);
-
+  
         // Resize the image if photo exists
         let resizedImage = null;
         if (photo) {
@@ -150,66 +146,60 @@ const Login = () => {
               100,
               0,
             );
-
+  
             console.log('Resized Image Path:', resizedImage.uri);
           } catch (error) {
             console.error('Image Processing Error:', error);
             console.log('Error', 'Failed to process the image.');
           }
         }
+        
         // Send data to the backend
         try {
+          const fcmtoken = lStorage.getString('fcmToken');
           const formData = new FormData();
           formData.append('full_name', name);
           formData.append('email', email);
           formData.append('google_id', google_id);
+          formData.append('device_token', fcmtoken);
+          
           console.log('179', resizedImage);
-          // Append photo as filename only
-          // if (photo) {
-          //   formData.append('photo', {
-          //     uri: photo || null,
-          //     name: "image",
-          //     type: 'image/jpg',
-          //   });
-          // }
-
-          // if (resizedImage) {
-          //   formData.append("photo", {
-          //     uri: resizedImage.uri || null,
-          //     name: `profile_${Date.now()}.jpeg`, // Unique name for the photo
-          //     type: "image/jpeg",
-          //   });
-          // }
-
+  
+          // Append photo (either the resized image or original)
+          if (resizedImage) {
+            formData.append("avatar", {
+              uri: resizedImage.uri, // Ensure uri is not null or undefined
+              name: `profile_${Date.now()}.jpeg`, // Unique name for the photo
+              type: "image/jpeg", // Correct MIME type
+            });
+          } else if (photo) {
+            formData.append("avatar", {
+              uri: photo, // Use original photo if resized image doesn't exist
+              name: `profile_${Date.now()}.jpeg`, // Unique name for the photo
+              type: "image/jpeg", // Correct MIME type
+            });
+          }
+  
           console.log('FormData ready. Sending request...');
-          // formData._parts.forEach(([key, value]) =>
-          //   console.log(`Key: ${key}, Value: ${JSON.stringify(value)}`),
-          // );
-          console.log('formdata', formData);
           const apiResponse = await soicalLogin(formData).unwrap();
-          console.log('Upload Successful:', apiResponse?.data?.access_token);
-
-          if (apiResponse?.data?.access_token) {
-           const res = setStorageToken(apiResponse?.data?.access_token);
-           console.log("google token", res)
+          console.log('Upload Successful:', apiResponse);
+  
+          if (apiResponse?.access_token) {
+            const res =   lStorage.setString('token', apiResponse?.access_token);
+            // const res = setStorageToken(apiResponse?.access_token);
+            console.log("google token", res);
             navigation?.replace('LoadingSplash');
           }
         } catch (error) {
-          console.error(
-            'Error during upload:',
-            error?.data?.message || error.message || error,
-          );
-          Alert.alert(
-            'Wrong somewhere',
-            'Please try again',
-          );
+          console.error('Error during upload:', error?.data?.message || error.message || error);
+          Alert.alert('Wrong somewhere', 'Please try again');
         }
       } else {
         console.log('Google Sign-In Cancelled by User');
       }
     } catch (error) {
       console.error('Google Sign-In Error:', error);
-
+  
       // Handle specific Google Sign-In errors
       if (error.code) {
         switch (error.code) {
@@ -233,6 +223,7 @@ const Login = () => {
       }
     }
   };
+  
   
 
   return (

@@ -30,10 +30,13 @@ const Profile = (props: Props) => {
   console.log('profileImg', profileImage);
   const [postUpdateProfile, {isLoading, isError}] =
     usePostUpdateProfileMutation();
-  const {data} = useGetProfileQuery({});
+  const {data} = useGetProfileQuery({}, {
+    refetchOnFocus:true
+  });
   console.log('profile data', data?.data);
 
   useEffect(() => {
+
     const img = data?.data?.avatar;
     setProfileImage(img)
   }, [data?.data?.avatar]);

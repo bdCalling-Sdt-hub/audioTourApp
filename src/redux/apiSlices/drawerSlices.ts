@@ -11,7 +11,7 @@ const drawwerSlices = api.injectEndpoints({
         }),
         getFaq: builder.query({
             query: () => ({
-                url: `/pages/faq`,
+                url: `/faq`,
                 method: "GET",
 
             })

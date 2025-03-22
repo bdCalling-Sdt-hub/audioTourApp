@@ -20,7 +20,7 @@ import {useRegisterUserMutation} from '../../redux/apiSlices/authSlice';
 import LinearGradient from 'react-native-linear-gradient';
 import {PermissionsAndroid} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { getStorageToken, lStorage } from '../../utils/utils';
+import {getStorageToken, lStorage} from '../../utils/utils';
 
 interface SignupDataProps {
   fullName: string;
@@ -33,6 +33,7 @@ const SignUp = () => {
   const [deviceId, setDeviceId] = useState('');
   const [isHidePassword, setIsHidePassword] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  console.log('checkbox', toggleCheckBox);
   const [registerUser, {isLoading, isError}] = useRegisterUserMutation();
   const [signupData, setSignupData] = useState<SignupDataProps>({
     fullName: '',
@@ -45,27 +46,43 @@ const SignUp = () => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleSignup = async () => {
-    const fcmtoken = lStorage.getString('fcmToken')
-    console.log("fcmToken", fcmtoken)
-    try {
-      const formData = {
-        full_name: signupData.fullName,
-        email: signupData.email,
-        password: signupData.password,
-        password_confirmation: signupData.confirmPassword,
-        device_token: fcmtoken
-      };
+    const fcmtoken = lStorage.getString('fcmToken');
+    console.log('fcmToken', fcmtoken);
 
-      console.log('Sending request with data:', signupData);
+    // Password validation regex: at least one uppercase, one lowercase, and one number
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
 
-      const res = await registerUser(formData).unwrap();
-      console.log('Signup response:', res);
-
-      if (res?.success) {
-        navigation.navigate('otpVerification', {email: signupData?.email});
+    if (toggleCheckBox === true) {
+      // Validate password
+      if (!passwordRegex.test(signupData.password)) {
+        Alert.alert(
+          'Password must contain at least one uppercase letter, one lowercase letter, and one number.',
+        );
+        return;
       }
-    } catch (error) {
-      console.error('Signup error:', error);
+
+      try {
+        const formData = {
+          full_name: signupData.fullName,
+          email: signupData.email,
+          password: signupData.password,
+          password_confirmation: signupData.confirmPassword,
+          device_token: fcmtoken,
+        };
+
+        console.log('Sending request with data:', signupData);
+
+        const res = await registerUser(formData).unwrap();
+        console.log('Signup response:', res);
+
+        if (res?.success) {
+          navigation.navigate('otpVerification', {email: signupData?.email});
+        }
+      } catch (error) {
+        console.error('Signup error:', error);
+      }
+    } else {
+      Alert.alert('Please select the checkbox');
     }
   };
 
@@ -211,9 +228,15 @@ const SignUp = () => {
                 setToggleCheckBox(value);
               }}
             />
-            <Text style={tw`text-xs text-textSecondary`}>
-              I agree to the Terms and Conditions
-            </Text>
+            <TouchableOpacity
+              onPress={()=>navigation?.navigate('TermsAndCondition')}>
+              <Text style={tw`text-xs text-textSecondary`}>
+                I agree to the{' '}
+                <Text style={tw`text-green-700 underline`}>
+                  Terms and Conditions
+                </Text>
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <Text style={tw`text-darkSub text-xs font-LexDecaMedium py-2`}>

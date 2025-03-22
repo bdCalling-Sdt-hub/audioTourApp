@@ -22,9 +22,23 @@ const subscriptionSlice = api.injectEndpoints({
                 method: "GET",
             })
         }),
+        getCheckIsSubscribed: builder.query({
+            query: ()=> ({
+                url: `/is-subscribed-required`,
+                method: "GET",
+            })
+        }),
+       getListenCount: builder.query({
+        query: () => ({
+            url: `/audio-count`,
+            method: "GET"
+        })
+       })
           
     })
 });
 export const {usePostSubscriptionMutation,
 useGetSubscriptionQuery,
+useGetCheckIsSubscribedQuery,
+useGetListenCountQuery,
 } = subscriptionSlice;

@@ -33,7 +33,7 @@ const Header: React.FC = () => {
   const navigation = useNavigation<DrawerNavigationProp<RootStackParamList>>();
   const {data, isLoading, isError} = useGetNotificationQuery({});
   const [putMarkAllRead] = usePutMarkAllReadMutation();
-  console.log('notification data', data?.data?.data);
+  // console.log('notification data', data?.data?.data);
 
   const nullCount = data?.data?.data?.filter(item => !item?.read_at).length;
   const toggleDrawer = () => {

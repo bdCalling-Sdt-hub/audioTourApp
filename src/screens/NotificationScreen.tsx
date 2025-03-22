@@ -9,16 +9,16 @@ type Props = {};
 
 const NotificationScreen = ({navigation}) => {
   const {data, isLoading, isError} = useGetNotificationQuery({});
-  console.log('data', data?.data);
+  console.log('data', data?.data?.data);
   return (
     <View style={tw`flex-1 px-[4%] my-6`}>
       <TouchableOpacity onPress={()=> navigation.goBack()} style={tw`flex-row  items-center gap-4`}>
         <SvgXml xml={IconLeftArrow} />
-        <Text style={tw`font-bold text-xl`}>NotificationScreen</Text>
+        <Text style={tw`font-bold text-xl`}>Notifications</Text>
       </TouchableOpacity>
       <View style={tw`mt-6`}>
         <FlatList
-          data={data?.data}
+          data={data?.data?.data}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => (
             <View
