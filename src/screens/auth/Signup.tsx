@@ -54,7 +54,7 @@ const SignUp = () => {
               floatingPlaceholder
               svgFirstIcon={IconMail}
               placeholder="Your E-mail"
-              style={tw`text-white`}
+              style={tw`text-black`}
               focusStyle={tw`border-primary`}
             />
           </View>
@@ -68,7 +68,7 @@ const SignUp = () => {
               svgSecondIcon={isHidePassword ? IconCloseEye : IconOpenEye}
               secureTextEntry={isHidePassword}
               onPress={() => setIsHidePassword(!isHidePassword)}
-              style={tw`text-white`}
+              style={tw`text-black`}
               focusStyle={tw`border-primary`}
             />
           </View>
