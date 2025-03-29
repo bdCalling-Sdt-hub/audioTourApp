@@ -36,8 +36,8 @@ const authSlice = api.injectEndpoints({
           url: `/register`,
           method: 'POST', // Ensure method is explicitly defined
           headers: {
-            // 'Content-Type': 'multipart/form-data',
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            // 'Content-Type': 'application/json',
           },
           body: data,
         }),

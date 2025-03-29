@@ -64,7 +64,7 @@ const MyStories = ({navigation, route}: NavigProps<string>) => {
     }
   };
   return (
-    <ScrollView contentContainerStyle={tw` bg-white`}>
+    <ScrollView contentContainerStyle={tw` bg-white flex-1`}>
       <View style={tw`flex-row justify-between items-center p-[4%]`}>
         {/* <Image
           style={tw`w-24 h-11`}

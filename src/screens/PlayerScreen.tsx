@@ -87,7 +87,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   const [isMute, setIsMute] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCheck, setIsCheck] = useState(false)
-  // const [currentTrackId, setCurrentTrackId] = useState();
+  const [currentTrackId, setCurrentTrackId] = useState();
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
   console.log('trackIndex', currentTrackIndex);
   const {selectedTrack, trackList} = route?.params || {};
@@ -171,7 +171,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   // };
 
   const pauseMusic = (): void => {
-    MusicControl.pause()
+    MusicControl?.pause()
       .then(() => {
         setIsPlaying(false);
       })
@@ -181,6 +181,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   };
 
   const handleSkipToNext = async (): void => {
+    const currentTrackId = trackList[currentTrackIndex]?.id;
     if (isCheck?.data?.is_subscription_required === true) {
       navigation?.navigate('Subscription');
     } else {

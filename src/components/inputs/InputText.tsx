@@ -13,6 +13,7 @@ interface InputTextProps
   fieldStyle?: any;
   Component?: React.ReactNode;
   focusSTyle?: any;
+  errorMessage?: string;
 }
 
 const InputText = ({
@@ -23,6 +24,7 @@ const InputText = ({
   fieldStyle,
   focusSTyle,
   Component,
+  errorMessage,
   ...inputProps // Spread remaining props to pass to TextField
 }: InputTextProps) => {
   const [focus, setFocus] = React.useState(false);
