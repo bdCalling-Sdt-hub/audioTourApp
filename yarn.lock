@@ -2104,17 +2104,17 @@
   resolved "https://registry.npmjs.org/@react-native-community/slider/-/slider-4.5.4.tgz"
   integrity sha512-TFhwnrp0LTFG90yat8mqEOBLLMJylpnchO5F0KusH8dI0VzViIVIXOzhnx0mUVqLvRwRPbqBB0tvhxd739UhmA==
 
-"@react-native-firebase/app@^21.12.0", "@react-native-firebase/app@21.12.0":
-  version "21.12.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-21.12.0.tgz"
-  integrity sha512-zMaXtFnnxRU3aa43msPXv25mJUVKQtGwn0TBl4mcPnj4Dr3rz3QHXZtkk3OAj7Q5J7BoNnedjyAVU2HxEK0/Wg==
+"@react-native-firebase/app@^21.12.0", "@react-native-firebase/app@21.12.3":
+  version "21.12.3"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-21.12.3.tgz"
+  integrity sha512-q+FoAJ9yZrXg4hJDXQQputeO/b0yos3iMMV7nnhz3ZizVE9MxfpPCWACveYhs9Suni+c/+b44wPR9P6vS/kM/g==
   dependencies:
     firebase "11.3.1"
 
-"@react-native-firebase/messaging@^21.12.0":
-  version "21.12.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-21.12.0.tgz"
-  integrity sha512-KIPuLLptNBryv/upuzW1FLFWv/L/9otSwzJdhkYybV07IG/eeK/4l615UargT9ZyYPSlDjAZC+7yUK2t+cSGNA==
+"@react-native-firebase/messaging@^21.12.3":
+  version "21.12.3"
+  resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-21.12.3.tgz"
+  integrity sha512-ibrT9VPPPZggRN0a6qENsoU0kGTKNvGcXhjZ3YYB2B6TCDnTgI29vZOTT0KM5RgR7L8FBcT7Ie3NOT1OQWD7pw==
 
 "@react-native-google-signin/google-signin@^13.2.0":
   version "13.2.0"
@@ -4809,6 +4809,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
+
+fsevents@^2.3.2, fsevents@~2.3.2:
+  version "2.3.3"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
   version "1.1.2"

@@ -241,7 +241,7 @@ const SignUp = () => {
 
           <Text style={tw`text-darkSub text-xs font-LexDecaMedium py-2`}>
             Password needs to be at least 8 characters long, contain at least 1
-            number and 1 symbol.
+            number and 1 symbol and 1 uppercase letter.
           </Text>
 
           <Button
