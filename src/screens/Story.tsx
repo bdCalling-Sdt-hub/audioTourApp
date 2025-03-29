@@ -71,7 +71,7 @@ const Story = ({navigation}: NavigProps<string>) => {
           showsHorizontalScrollIndicator={false}
           data={allStory?.data?.data}
           renderItem={({item, index}) => {
-           
+           console.log("allStory item", item)
             return (
               <TouchableOpacity 
               onPress={() => navigation.navigate('MyStories', {item: item})}

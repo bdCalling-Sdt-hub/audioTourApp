@@ -23,7 +23,8 @@ const baseQueryWithRath: BaseQueryFn<BaseQueryArgs, unknown, unknown> = async (
   try {
     const result: AxiosResponse = await axios({
    
-      baseURL: 'http://10.0.80.13:8003/api',
+      // baseURL: 'http://10.0.80.13:8003/api',
+      baseURL: 'http://182.252.68.227:9001/api',
       ...args,
       url: args.url,
       method: args.method,
@@ -78,9 +79,11 @@ export const api = createApi({
     'notification',
     'map',
     'Profile',
-    'History'
+    'History',
+    "Story"
   ],
 });
 
-// export const imageUrl = 'http://192.168.12.160:7000/';
-export const imageUrl = 'http://182.252.68.227:8003';
+
+// export const imageUrl = 'http://182.252.68.227:8003';
+export const imageUrl = 'http://182.252.68.227:9001';

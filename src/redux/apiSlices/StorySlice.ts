@@ -11,14 +11,17 @@ const storySlice = api.injectEndpoints({
                 // 'Content-Type': 'application/json',
               },
             body: id
-        })
+            
+        }),
+        invalidatesTags: ["History"]
     }),   
 
     getAllStoy: builder.query ({
         query: () => ({
             url: `/story`,
             method: 'GET',
-        })
+        }),
+        providesTags: ["History"]
     }),
 
     deleteStoy: builder.mutation ({

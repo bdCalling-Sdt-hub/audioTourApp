@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
   ScrollView,
@@ -58,6 +59,9 @@ const MyStories = ({navigation, route}: NavigProps<string>) => {
     formData?.append("category_id", item?.id)
     const res = await postStoy(formData)
     console.log("ress", res)
+    if(res?.error){
+      Alert?.alert("Story already exist")
+    }
   };
   return (
     <ScrollView contentContainerStyle={tw` bg-white`}>
@@ -69,6 +73,8 @@ const MyStories = ({navigation, route}: NavigProps<string>) => {
         <TouchableOpacity onPress={() => navigation?.goBack()}>
           <SvgXml xml={leftArrow} width={25} height={25} />
         </TouchableOpacity>
+        {/* <Text style={tw`text-black font-bold text-lg`}>My stories</Text>
+        <View></View> */}
       </View>
       <View style={tw``}>
         <View style={tw`relative`}>
@@ -110,7 +116,7 @@ const MyStories = ({navigation, route}: NavigProps<string>) => {
                     style={tw`w-14 h-14 rounded-lg mt-2`}
                     source={{uri: item?.artwork}}
                   />
-                  <Text>{item?.title} </Text>
+                  <Text style={tw`text-black`}>{item?.title} </Text>
                 </TouchableOpacity>
               </View>
             );
