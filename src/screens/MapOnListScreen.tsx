@@ -40,7 +40,7 @@ const MapOnListScreen = ({navigation, route}) => {
         style={tw`flex-row gap-4 items-center mb-2`}
         onPress={() => navigation.goBack()}>
         <SvgXml xml={leftArrow} />
-        <Text style={tw`text-xl font-bold`}>From the map</Text>
+        <Text style={tw`text-xl text-black font-bold`}>From the map</Text>
       </TouchableOpacity>
 
       <Text>Adjust the map for more stories</Text>

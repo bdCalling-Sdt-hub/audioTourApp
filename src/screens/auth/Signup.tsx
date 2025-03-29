@@ -217,19 +217,23 @@ const SignUp = () => {
               focusStyle={tw`border-primary`}
             />
           </View>
+          <Text style={tw`text-gray-400`}> Password atleast 8 (eight) character</Text>
 
           <View style={tw`flex-row items-center gap-2`}>
-            <CheckBox
-              onCheckColor="#0187D1"
-              onFillColor="#0187D1"
-              tintColor="#0187D1"
-              value={toggleCheckBox}
-              onValueChange={value => {
-                setToggleCheckBox(value);
-              }}
-            />
+            <View style={tw`border p-0 rounded-lg`}>
+              <CheckBox
+                style={tw`text-black border border-black`}
+                onCheckColor="#0187D1"
+                onFillColor="#0187D1"
+                tintColor="#0187D1"
+                value={toggleCheckBox}
+                onValueChange={value => {
+                  setToggleCheckBox(value);
+                }}
+              />
+            </View>
             <TouchableOpacity
-              onPress={()=>navigation?.navigate('TermsAndCondition')}>
+              onPress={() => navigation?.navigate('TermsAndCondition')}>
               <Text style={tw`text-xs text-textSecondary`}>
                 I agree to the{' '}
                 <Text style={tw`text-green-700 underline`}>

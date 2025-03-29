@@ -59,7 +59,7 @@ const OtpVerificaton = ({navigation, route}: NavigProps<null>) => {
       <TextInput
         cursorColor={'black'}
         key={index}
-        style={tw`h-16 w-16 border items-center justify-center border-textSecondary rounded-xl my-6 text-center`}
+        style={tw`h-16 w-16 border items-center justify-center border-textSecondary text-black rounded-xl my-6 text-center`}
         keyboardType="numeric"
         maxLength={1}
         value={digit}
