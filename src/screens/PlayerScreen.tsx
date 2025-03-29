@@ -86,12 +86,13 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   const navigation = useNavigation();
   const [isMute, setIsMute] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const [isCheck, setIsCheck] = useState(false)
-  const [currentTrackId, setCurrentTrackId] = useState();
+  // const [currentTrackId, setCurrentTrackId] = useState();
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0); // Keep track of the index
   console.log('trackIndex', currentTrackIndex);
   const {selectedTrack, trackList} = route?.params || {};
-  const [postStoreFavorite, {isLoading, isError}] =
+  const [postStoreFavorite] =
     usePostStoreFavoriteMutation();
   const [postHistoy] = usePostHistoyMutation();
   const [postStorBookMark] = usePostStorBookMarkMutation();
@@ -171,7 +172,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   // };
 
   const pauseMusic = (): void => {
-    MusicControl?.pause()
+    MusicControl.pause()
       .then(() => {
         setIsPlaying(false);
       })
@@ -181,7 +182,6 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
   };
 
   const handleSkipToNext = async (): void => {
-    const currentTrackId = trackList[currentTrackIndex]?.id;
     if (isCheck?.data?.is_subscription_required === true) {
       navigation?.navigate('Subscription');
     } else {
@@ -190,6 +190,7 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
       setCurrentTrackIndex(currentTrackIndex + 1);
       playMusic(nextTrack.url);
       try {
+        const currentTrackId = trackList[currentTrackIndex]?.id;
         const formData = new FormData();
         formData.append('audio_id', currentTrackId);
         const res = await postHistoy(formData);
@@ -263,14 +264,14 @@ const PlayerScreen: React.FC<RouteParams> = ({route}) => {
     console.log('bookMark store res', res);
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <View style={tw`flex-1 justify-center items-center`}>
-  //       <ActivityIndicator size="large" color="#064145" />
-  //       <Text style={tw`text-primary mt-2`}>Loading ....</Text>
-  //     </View>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color="#064145" />
+        <Text style={tw`text-primary mt-2`}>Loading ....</Text>
+      </View>
+    );
+  }
 
   // useFocusEffect(() => {
   //   const isCheck = data?.is_subscription_required;
